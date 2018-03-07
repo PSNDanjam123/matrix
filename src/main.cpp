@@ -5,6 +5,7 @@ using namespace Jim::Matrix;
 int main(void) {
     Mat<int> m1(2,3);
     Mat<float> m2(2,3);
+    Mat4<float> m5;
 
     m1.map([](float) {
             return 2;
@@ -19,7 +20,23 @@ int main(void) {
 
     m1 += 2;
 
+    Mat<int> m3 = m1.clone();
+
+    m5(0,0) = 666;
+
+    Mat4<float> m6 = m5.clone();
+
+    m5(0,0) = 10;
+    m6(1,2) = 45;
+
     std::cout << m1.str() << "\n\n";
+
+    std::cout << m3.str() << "\n\n";
+
+    std::cout << m5.str() << "\n\n";
+
+    std::cout << m6.str() << "\n\n";
+
 
     return 0;
 }

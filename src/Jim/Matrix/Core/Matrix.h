@@ -30,6 +30,9 @@ namespace Jim::Matrix::Core {
                 };
                 return this->map(callbackFull);
             }
+            virtual C clone() {
+                return this->_chain();
+            }
             virtual std::string str() {
                 std::stringstream output;
                 this->map([this, &output](T val, unsigned x, unsigned) -> T {
