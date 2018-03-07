@@ -3,45 +3,23 @@
 using namespace Jim::Matrix;
 
 int main(void) {
-    Mat<int> m1(2,3);
-    Mat<float> m2(2,3);
-    Mat4<float> m5;
-    Mat<int> m7(4,4);
-    m7.map([](float, unsigned, unsigned) {return 3;});
+    Mat4<float> a;
+    Mat4<float> b;
+    Mat4<int> c;
 
-    m1.map([](float) {
-            return 2;
-            });
+    a += 3;
+    b += 4;
+    c += 1;
 
-    std::cout << m1.str() << "\n\n";
+    std::cout << a.str() << '\n';
+    std::cout << b.str() << '\n';
+    std::cout << c.str() << '\n';
 
-    int m = 5;
-    m2.map([&m](float, unsigned x, unsigned y) {return (x + y) * m;});
+    a -= c;
 
-    m1 += m2;
+    a -= 4;
 
-    m1 += 2;
-
-    Mat<int> m3 = m1.clone();
-
-    m5(0,0) = 666;
-
-    Mat4<float> m6 = m5.clone();
-
-    m5(0,0) = 10;
-    m6(1,2) = 45;
-
-    m6 += m7;
-
-    std::cout << m1.str() << "\n\n";
-
-    std::cout << m3.str() << "\n\n";
-
-    std::cout << m5.str() << "\n\n";
-
-    std::cout << m6.str() << "\n\n";
-
-    std::cout << m7.str() << "\n\n";
+    std::cout << a.str() << '\n';
 
     return 0;
 }

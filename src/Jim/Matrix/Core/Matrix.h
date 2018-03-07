@@ -54,6 +54,15 @@ namespace Jim::Matrix::Core {
             template <typename Num> typename std::enable_if<std::is_convertible<Num, T>::value, C&>::type operator+= (Num val2) {
                 return this->map([&val2](float val) {return val + val2;});
             }
+            template <class Mat> typename std::enable_if<std::is_class<Mat>::value, C&>::type operator-= (Mat mat) {
+                if(this->_cols != mat.cols() || this->_rows != mat.rows()) {
+                    exit(EXIT_FAILURE);
+                }
+                return this->map([&mat](float val, unsigned x, unsigned y) {return val - mat(x,y);});
+            }
+            template <typename Num> typename std::enable_if<std::is_convertible<Num, T>::value, C&>::type operator-= (Num val2) {
+                return this->map([&val2](float val) {return val - val2;});
+            }
             unsigned rows() {
                 return this->_rows;
             }
