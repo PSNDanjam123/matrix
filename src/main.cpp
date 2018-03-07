@@ -5,15 +5,13 @@ using namespace Jim::Matrix;
 int main(void) {
     Mat4<float> a;
     Mat4<float> b;
-    Mat4<int> c;
 
-    a += 3;
-    b += 4;
-    c += 1;
+    a += 2;
+    b += 3;
 
-    if(a != c) {
-        std::cout << "works";
-    }
+    Mat4<float> c = a + b + b + a;
+
+    std::cout << c.str();
 
     return 0;
 }

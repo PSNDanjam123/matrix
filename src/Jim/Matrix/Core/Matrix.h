@@ -83,6 +83,11 @@ namespace Jim::Matrix::Core {
             template <typename Num> typename std::enable_if<std::is_convertible<Num, T>::value, C&>::type operator-= (Num val2) {
                 return this->map([&val2](float val) {return val - val2;});
             }
+            template<class Mat> friend typename std::enable_if<std::is_class<Mat>::value, C>::type operator+(C lmat, Mat rmat) {
+                C mat = lmat.clone();
+                mat.map([&rmat](T val, unsigned x, unsigned y) {return val + rmat.get(x, y);});
+                return mat;
+            }
             unsigned rows() {
                 return this->_rows;
             }
