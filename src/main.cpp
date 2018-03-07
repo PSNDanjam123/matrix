@@ -3,18 +3,23 @@
 using namespace Jim::Matrix;
 
 int main(void) {
-    Mat4<float> m4;
-    Mat<int> m(2,3);
+    Mat<int> m1(2,3);
+    Mat<float> m2(2,3);
 
-    int t = 1;
+    m1.map([](float) {
+            return 2;
+            });
 
-    m.map([](float, unsigned x, unsigned y) {
-            return x + y;
-            }).map([&t](float val, unsigned, unsigned) {
-                return val + t++;
-                });
+    std::cout << m1.str() << "\n\n";
 
-    std::cout << m.str();
+    int m = 5;
+    m2.map([&m](float, unsigned x, unsigned y) {return (x + y) * m;});
+
+    m1 += m2;
+
+    m1 += 2;
+
+    std::cout << m1.str() << "\n\n";
 
     return 0;
 }
