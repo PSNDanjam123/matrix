@@ -35,11 +35,10 @@ namespace Jim::Matrix::Core {
             }
             virtual std::string str() {
                 std::stringstream output;
-                this->map([this, &output](T val, unsigned x, unsigned) -> T {
+                this->_loop([this, &output](T val, unsigned x, unsigned) -> T {
                         output << val << '\t';
                         if(x == this->_cols - 1)
-                        output << '\n';
-                        return val;});
+                        output << '\n';});
                 return output.str();
             }
             virtual T& operator() (unsigned x, unsigned y) {
@@ -106,13 +105,16 @@ namespace Jim::Matrix::Core {
             C& _chain() {
                 return static_cast<C&>(*this);
             }
-            void _map(std::function<T (T val, unsigned x, unsigned y)> callback) {
+            void _loop(std::function<void (T val, unsigned x, unsigned y)> callback) {
                 unsigned r, c;
                 for(r = 0; r < this->_rows; r++) {
                     for(c = 0; c < this->_cols; c++) {
-                        this->_matrix[r][c] = callback(this->_matrix[r][c], c, r);
+                        callback(this->_matrix[r][c], c, r);
                     }
                 }
+            }
+            void _map(std::function<T (T val, unsigned x, unsigned y)> callback) {
+                this->_loop([this, callback](T val, unsigned x, unsigned y) -> T {return this->_matrix[y][x] = callback(val, x, y);});
             }
     };
 }
