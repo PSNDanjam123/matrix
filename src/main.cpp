@@ -9,14 +9,7 @@ int main(void) {
 
     m(2,2) = m(1,1) + m(1,3);
 
-    for(unsigned x = 0; x < 4; x++) {
-        for(unsigned y = 0; y < 4; y++) {
-            std::cout << m(x,y) << '\t';
-            if(y == 3) {
-                std::cout << '\n';
-            }
-        }
-    }
+    std::cout << m.str();
 
     return 0;
 }

@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <sstream>
 #include <vector>
 #include <functional>
 
@@ -28,6 +30,15 @@ namespace Jim::Matrix::Core {
                         return callback(val);
                     };
                     return this->map(callbackFull);
+                }
+                virtual std::string str() {
+                    std::stringstream output;
+                    this->map([this, &output](T val, unsigned x, unsigned) -> T {
+                            output << val << '\t';
+                            if(x == this->_cols - 1)
+                                output << '\n';
+                            return val;});
+                    return output.str();
                 }
                 virtual T& operator() (unsigned x, unsigned y) {
                     return this->_matrix[y][x];
