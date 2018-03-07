@@ -88,6 +88,11 @@ namespace Jim::Matrix::Core {
                 mat.map([&rmat](T val, unsigned x, unsigned y) {return val + rmat.get(x, y);});
                 return mat;
             }
+            template<typename Num> friend typename std::enable_if<std::is_convertible<Num, T>::value, C>::type operator+(C lmat, Num val2) {
+                C mat = lmat.clone();
+                mat.map([&val2](T val1, unsigned, unsigned) {return val1 + val2;});
+                return mat;
+            }
             unsigned rows() {
                 return this->_rows;
             }

@@ -9,7 +9,7 @@ int main(void) {
     a += 2;
     b += 3;
 
-    Mat4<float> c = a + b + b + a;
+    Mat4<float> c = a + b + 11 + b + a;
 
     std::cout << c.str();
 
