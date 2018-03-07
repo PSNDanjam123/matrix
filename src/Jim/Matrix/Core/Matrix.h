@@ -16,8 +16,8 @@ namespace Jim::Matrix::Core {
                         this->_matrix.push_back(row);
                     }
                 }
-                virtual C& test() {
-                    return this->_chain();
+                virtual T get(unsigned x, unsigned y) {
+                    return this->_matrix[y][x];
                 }
                 virtual C& map(std::function<T (T val, unsigned x, unsigned y)> callback) {
                     this->_map(callback);
