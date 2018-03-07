@@ -7,9 +7,7 @@ int main(void) {
 
     int t = 2;
     float a = example.get(1,1);
-    example.map([t](float val, unsigned x, unsigned y) -> float {
-            return val + t;
-            });
+    example.map([t](float val) { return val + t;});
     float b = example.get(1,1);
     float c = example.get(1,2);
 

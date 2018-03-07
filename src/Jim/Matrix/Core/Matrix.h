@@ -23,6 +23,12 @@ namespace Jim::Matrix::Core {
                     this->_map(callback);
                     return this->_chain();
                 }
+                virtual C& map(std::function<T (T val)> callback) {
+                    std::function<T (T val, unsigned x, unsigned y)> callbackFull = [callback](T val, unsigned, unsigned) -> T {
+                        return callback(val);
+                    };
+                    return this->map(callbackFull);
+                }
             private:
                 std::vector<std::vector<T>> _matrix;
                 const unsigned _rows;   //y
