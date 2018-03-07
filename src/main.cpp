@@ -11,15 +11,9 @@ int main(void) {
     b += 4;
     c += 1;
 
-    std::cout << a.str() << '\n';
-    std::cout << b.str() << '\n';
-    std::cout << c.str() << '\n';
-
-    a -= c;
-
-    a -= 4;
-
-    std::cout << a.str() << '\n';
+    if(a != c) {
+        std::cout << "works";
+    }
 
     return 0;
 }

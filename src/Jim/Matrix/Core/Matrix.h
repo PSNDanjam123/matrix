@@ -45,6 +45,26 @@ namespace Jim::Matrix::Core {
             virtual T& operator() (unsigned x, unsigned y) {
                 return this->_matrix[y][x];
             }
+            template <class Mat> typename std::enable_if<std::is_class<Mat>::value, bool>::type operator==(Mat& mat) {
+                bool result = true;
+                mat.map([this, &result](T val, unsigned x, unsigned y) {
+                        if(this->_matrix[y][x] != val) {
+                            result = false;
+                        }
+                        return val;
+                        });
+                return result;
+            }
+            template <class Mat> typename std::enable_if<std::is_class<Mat>::value, bool>::type operator!=(Mat& mat) {
+                bool result = false;
+                mat.map([this, &result](T val, unsigned x, unsigned y) {
+                        if(this->_matrix[y][x] != val) {
+                        result = true;
+                        }
+                        return val;
+                        });
+                return result;
+            }
             template <class Mat> typename std::enable_if<std::is_class<Mat>::value, C&>::type operator+= (Mat mat) {
                 if(this->_cols != mat.cols() || this->_rows != mat.rows()) {
                     exit(EXIT_FAILURE);
