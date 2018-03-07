@@ -1,13 +1,14 @@
 #include <iostream>
-#include "./Jim/Matrix/Mat4.h"
+#include "./Jim/Matrix.h"
 using namespace Jim::Matrix;
 
 int main(void) {
-    Mat4<float> m;
-    int multiplyer = 4;
-    m.map([multiplyer](float, unsigned x, unsigned y) {return (x + y) * multiplyer;});
+    Mat4<float> m4;
+    Mat<int> m(2,3);
 
-    m(2,2) = m(1,1) + m(1,3);
+    m.map([](float, unsigned x, unsigned y) {
+            return x + y;
+            });
 
     std::cout << m.str();
 
