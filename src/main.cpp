@@ -6,6 +6,8 @@ int main(void) {
     Mat<int> m1(2,3);
     Mat<float> m2(2,3);
     Mat4<float> m5;
+    Mat<int> m7(4,4);
+    m7.map([](float, unsigned, unsigned) {return 3;});
 
     m1.map([](float) {
             return 2;
@@ -29,6 +31,8 @@ int main(void) {
     m5(0,0) = 10;
     m6(1,2) = 45;
 
+    m6 += m7;
+
     std::cout << m1.str() << "\n\n";
 
     std::cout << m3.str() << "\n\n";
@@ -37,6 +41,7 @@ int main(void) {
 
     std::cout << m6.str() << "\n\n";
 
+    std::cout << m7.str() << "\n\n";
 
     return 0;
 }
