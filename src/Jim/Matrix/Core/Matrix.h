@@ -29,6 +29,9 @@ namespace Jim::Matrix::Core {
                     };
                     return this->map(callbackFull);
                 }
+                virtual T& operator() (unsigned x, unsigned y) {
+                    return this->_matrix[y][x];
+                }
             private:
                 std::vector<std::vector<T>> _matrix;
                 const unsigned _rows;   //y

@@ -3,15 +3,20 @@
 using namespace Jim::Matrix;
 
 int main(void) {
-    Mat4<float> example;
+    Mat4<float> m;
+    int multiplyer = 4;
+    m.map([multiplyer](float, unsigned x, unsigned y) {return (x + y) * multiplyer;});
 
-    int t = 2;
-    float a = example.get(1,1);
-    example.map([t](float val) { return val + t;});
-    float b = example.get(1,1);
-    float c = example.get(1,2);
+    m(2,2) = m(1,1) + m(1,3);
 
-    std::cout << a << ' ' << b << ' ' << c << '\n';
+    for(unsigned x = 0; x < 4; x++) {
+        for(unsigned y = 0; y < 4; y++) {
+            std::cout << m(x,y) << '\t';
+            if(y == 3) {
+                std::cout << '\n';
+            }
+        }
+    }
 
     return 0;
 }
