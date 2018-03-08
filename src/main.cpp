@@ -3,30 +3,14 @@
 using namespace Jim::Matrix;
 
 int main(void) {
-    Mat4<float> a;
-    Mat4<float> b;
-    Mat4<float> c;
+    Mat4l m1;
+    Mat4l m2;
+    Matl m3(4,4);
 
-    a += 2;
-    b += 3;
-    c += 2;
+    m1 += m2.identity();
+    m1 += m3.identity();
 
-    Mat4<float> d = a + b + 11 + b + a - (c + 9);
-    Mat4<float> e = a.identity() + 1;
-
-    std::cout << a.str() << b.str() << c.str() << d.str() << e.str();
-
-    if(a == b) {
-        std::cout << "a == b\n";
-    } else if(a != b) {
-        std::cout << "a != b\n";
-    }
-
-    if(a == c) {
-        std::cout << "a == c\n";
-    } else if(a != c) {
-        std::cout << "a != c\n";
-    }
+    std::cout << m1.str();
 
     return 0;
 }
