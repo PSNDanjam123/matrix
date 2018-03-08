@@ -87,8 +87,7 @@ namespace Jim::Matrix::Core {
             }
         private:
             std::vector<std::vector<T>> _matrix;
-            const unsigned _rows;   //y
-            const unsigned _cols;   //x
+            const unsigned _rows, _cols;
             C& _chain() {
                 return static_cast<C&>(*this);
             }
