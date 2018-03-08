@@ -11,7 +11,7 @@ int main(void) {
     b += 3;
     c += 2;
 
-    Mat4<float> d = a + b + 11 + b + a;
+    Mat4<float> d = a + b + 11 + b + a - (c + 9);
     Mat4<float> e = a.identity() + 1;
 
     std::cout << a.str() << b.str() << c.str() << d.str() << e.str();

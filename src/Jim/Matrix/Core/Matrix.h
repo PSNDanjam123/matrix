@@ -77,6 +77,12 @@ namespace Jim::Matrix::Core {
             template<typename Num> friend typename std::enable_if<std::is_convertible<Num, T>::value, C>::type operator+(C lmat, Num val2) {
                 return lmat.map([&val2](T val1) {return val1 + val2;});
             }
+            template<class Mat> friend typename std::enable_if<std::is_class<Mat>::value, C>::type operator-(C lmat, Mat rmat) {
+                return lmat.map([&rmat](T val, unsigned& x, unsigned& y) {return val - rmat.get(x, y);});
+            }
+            template<typename Num> friend typename std::enable_if<std::is_convertible<Num, T>::value, C>::type operator-(C lmat, Num val2) {
+                return lmat.map([&val2](T val1) {return val1 - val2;});
+            }
             unsigned rows() {
                 return this->_rows;
             }
