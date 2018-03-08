@@ -12,8 +12,9 @@ int main(void) {
     c += 2;
 
     Mat4<float> d = a + b + 11 + b + a;
+    Mat4<float> e = a.identity() + 1;
 
-    std::cout << a.str() << b.str() << c.str() << d.str();
+    std::cout << a.str() << b.str() << c.str() << d.str() << e.str();
 
     if(a == b) {
         std::cout << "a == b\n";

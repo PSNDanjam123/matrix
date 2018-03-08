@@ -34,6 +34,9 @@ namespace Jim::Matrix::Core {
             virtual C clone() {
                 return this->_chain();
             }
+            virtual C identity() {
+                return this->clone().map([](T, unsigned& x, unsigned& y) {return (x == y) ? 1 : 0;});
+            }
             virtual std::string str() {
                 std::stringstream output;
                 this->_forEach([this, &output](T val, unsigned& x, unsigned&) -> T {
