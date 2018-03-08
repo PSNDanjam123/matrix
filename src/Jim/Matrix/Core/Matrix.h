@@ -108,10 +108,10 @@ namespace Jim::Matrix::Core {
                             exit(EXIT_FAILURE);
                         }
                         Matrix<C, T> mat(lmat.rows(), rmat.cols());
-                        return mat.map([&lmat, &rmat] (T val, unsigned& x, unsigned& y) {
-                                unsigned i;
+                        unsigned i;
+                        return mat.map([&i, &lmat, &rmat] (T val, unsigned& x, unsigned& y) {
                                 for(i = 0; i < lmat.cols(); i++) {
-                                    val += lmat.get(i, y) * lmat(x, i);
+                                    val += lmat.get(i, y) * rmat.get(x, i);
                                 }
                                 return val;
                                 });
