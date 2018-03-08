@@ -13,7 +13,7 @@ int main(void) {
 
     Mat4<float> d = a + b + 11 + b + a;
 
-    std::cout << d.str();
+    std::cout << a.str() << b.str() << c.str() << d.str();
 
     if(a == b) {
         std::cout << "a == b\n";

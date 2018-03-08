@@ -17,26 +17,26 @@ namespace Jim::Matrix::Core {
                     this->_matrix.push_back(row);
                 }
             }
-            virtual T get(unsigned x, unsigned y) {
+            virtual T get(unsigned& x, unsigned& y) {
                 return this->_matrix[y][x];
             }
-            virtual C& forEach(std::function<void (T val, unsigned x, unsigned y)> callback) {
+            virtual C& forEach(std::function<void (T val, unsigned& x, unsigned& y)> callback) {
                 this->_forEach(callback);
                 return this->_chain();
             }
-            virtual C& map(std::function<T (T val, unsigned x, unsigned y)> callback) {
+            virtual C& map(std::function<T (T val, unsigned& x, unsigned& y)> callback) {
                 this->_map(callback);
                 return this->_chain();
             }
             virtual C& map(std::function<T (T val)> callback) {
-                return this->map([callback](T val, unsigned, unsigned) {return callback(val);});
+                return this->map([callback](T val, unsigned&, unsigned&) {return callback(val);});
             }
             virtual C clone() {
                 return this->_chain();
             }
             virtual std::string str() {
                 std::stringstream output;
-                this->_forEach([this, &output](T val, unsigned x, unsigned) -> T {
+                this->_forEach([this, &output](T val, unsigned& x, unsigned&) -> T {
                         output << val << '\t';
                         if(x == this->_cols - 1)
                         output << '\n';});
@@ -59,7 +59,7 @@ namespace Jim::Matrix::Core {
                 if(this->_cols != mat.cols() || this->_rows != mat.rows()) {
                     exit(EXIT_FAILURE);
                 }
-                return this->map([&mat](float val, unsigned x, unsigned y) {return val + mat(x,y);});
+                return this->map([&mat](float val, unsigned& x, unsigned& y) {return val + mat(x,y);});
             }
             template <typename Num> typename std::enable_if<std::is_convertible<Num, T>::value, C&>::type operator+= (Num val2) {
                 return this->map([&val2](float val) {return val + val2;});
@@ -68,18 +68,16 @@ namespace Jim::Matrix::Core {
                 if(this->_cols != mat.cols() || this->_rows != mat.rows()) {
                     exit(EXIT_FAILURE);
                 }
-                return this->map([&mat](float val, unsigned x, unsigned y) {return val - mat(x,y);});
+                return this->map([&mat](float val, unsigned& x, unsigned& y) {return val - mat(x,y);});
             }
             template <typename Num> typename std::enable_if<std::is_convertible<Num, T>::value, C&>::type operator-= (Num val2) {
                 return this->map([&val2](float val) {return val - val2;});
             }
             template<class Mat> friend typename std::enable_if<std::is_class<Mat>::value, C>::type operator+(C lmat, Mat rmat) {
-                C mat = lmat.clone();
-                return mat.map([&rmat](T val, unsigned x, unsigned y) {return val + rmat.get(x, y);});
+                return lmat.map([&rmat](T val, unsigned& x, unsigned& y) {return val + rmat.get(x, y);});
             }
             template<typename Num> friend typename std::enable_if<std::is_convertible<Num, T>::value, C>::type operator+(C lmat, Num val2) {
-                C mat = lmat.clone();
-                return mat.map([&val2](T val1, unsigned, unsigned) {return val1 + val2;});
+                return lmat.map([&val2](T val1) {return val1 + val2;});
             }
             unsigned rows() {
                 return this->_rows;
@@ -94,7 +92,7 @@ namespace Jim::Matrix::Core {
             C& _chain() {
                 return static_cast<C&>(*this);
             }
-            void _forEach(std::function<void (T val, unsigned x, unsigned y)> callback) {
+            void _forEach(std::function<void (T val, unsigned& x, unsigned& y)> callback) {
                 unsigned r, c;
                 for(r = 0; r < this->_rows; r++) {
                     for(c = 0; c < this->_cols; c++) {
@@ -102,8 +100,8 @@ namespace Jim::Matrix::Core {
                     }
                 }
             }
-            void _map(std::function<T (T val, unsigned x, unsigned y)> callback) {
-                this->_forEach([this, callback](T val, unsigned x, unsigned y) -> T {return this->_matrix[y][x] = callback(val, x, y);});
+            void _map(std::function<T (T val, unsigned& x, unsigned& y)> callback) {
+                this->_forEach([this, callback](T val, unsigned& x, unsigned& y) -> T {return this->_matrix[y][x] = callback(val, x, y);});
             }
     };
 }
