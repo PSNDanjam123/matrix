@@ -6,7 +6,7 @@ int main(void) {
     Mat4f m1;
 
 
-    m1 += 1 + m1.identity() + 2;
+    m1 += 4 * m1.identity();
 
     std::cout << m1.str();
 
