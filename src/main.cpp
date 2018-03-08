@@ -3,12 +3,10 @@
 using namespace Jim::Matrix;
 
 int main(void) {
-    Mat4l m1;
-    Mat4l m2;
-    Matl m3(4,4);
+    Mat4f m1;
 
-    m1 += m2.identity();
-    m1 += m3.identity();
+
+    m1 += 1 + m1.identity() + 2;
 
     std::cout << m1.str();
 
