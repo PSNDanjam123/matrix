@@ -11,9 +11,8 @@ namespace Jim::Matrix::Core {
                 unsigned r, c;
                 for(r = 0; r < this->_rows; r++) {
                     std::vector<T> row;
-                    for(c = 0; c < this->_cols; c++) {
+                    for(c = 0; c < this->_cols; c++)
                         row.push_back(0);
-                    }
                     this->_matrix.push_back(row);
                 }
             }
@@ -39,7 +38,7 @@ namespace Jim::Matrix::Core {
             }
             virtual std::string str() {
                 std::stringstream output;
-                this->_forEach([this, &output](T val, unsigned& x, unsigned&) -> T {
+                this->_forEach([this, &output](T val, unsigned& x, unsigned&) {
                         output << val << '\t';
                         if(x == this->_cols - 1)
                         output << '\n';});
@@ -50,7 +49,7 @@ namespace Jim::Matrix::Core {
             }
             template <class Mat> typename std::enable_if<std::is_class<Mat>::value, bool>::type operator==(Mat& mat) {
                 bool result = true;
-                mat.forEach([this, &result](T val, unsigned x, unsigned y) {
+                mat.forEach([this, &result](T val, unsigned& x, unsigned& y) {
                         if(this->_matrix[y][x] != val)
                         result = false;});
                 return result;
@@ -59,18 +58,16 @@ namespace Jim::Matrix::Core {
                 return !this->operator==(mat);
             }
             template <class Mat> typename std::enable_if<std::is_class<Mat>::value, C&>::type operator+= (Mat mat) {
-                if(this->_cols != mat.cols() || this->_rows != mat.rows()) {
+                if(this->_cols != mat.cols() || this->_rows != mat.rows())
                     exit(EXIT_FAILURE);
-                }
                 return this->map([&mat](float val, unsigned& x, unsigned& y) {return val + mat(x,y);});
             }
             template <typename Num> typename std::enable_if<std::is_convertible<Num, T>::value, C&>::type operator+= (Num val2) {
                 return this->map([&val2](float val) {return val + val2;});
             }
             template <class Mat> typename std::enable_if<std::is_class<Mat>::value, C&>::type operator-= (Mat mat) {
-                if(this->_cols != mat.cols() || this->_rows != mat.rows()) {
+                if(this->_cols != mat.cols() || this->_rows != mat.rows())
                     exit(EXIT_FAILURE);
-                }
                 return this->map([&mat](float val, unsigned& x, unsigned& y) {return val - mat(x,y);});
             }
             template <typename Num> typename std::enable_if<std::is_convertible<Num, T>::value, C&>::type operator-= (Num val2) {
@@ -98,9 +95,8 @@ namespace Jim::Matrix::Core {
             void _forEach(std::function<void (T val, unsigned& x, unsigned& y)> callback) {
                 unsigned r, c;
                 for(r = 0; r < this->_rows; r++) {
-                    for(c = 0; c < this->_cols; c++) {
+                    for(c = 0; c < this->_cols; c++)
                         callback(this->_matrix[r][c], c, r);
-                    }
                 }
             }
             void _map(std::function<T (T val, unsigned& x, unsigned& y)> callback) {
