@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <functional>
+#include <exception>
 
 namespace Jim::Matrix::Core {
     template <class C, typename T>
@@ -61,7 +62,7 @@ namespace Jim::Matrix::Core {
                 template <class Mat>
                     typename std::enable_if<std::is_class<Mat>::value, C&>::type operator+= (Mat mat) {
                         if(this->_cols != mat.cols() || this->_rows != mat.rows())
-                            exit(EXIT_FAILURE);
+                            throw std::runtime_error("Cannot be added to matrix");
                         return this->map([&mat](float val, unsigned& x, unsigned& y) {return val + mat(x,y);});
                     }
                 template <typename Num>
@@ -104,9 +105,8 @@ namespace Jim::Matrix::Core {
                     }
                 template<class Mat>
                     friend typename std::enable_if<std::is_class<Mat>::value, Matrix<C, T>>::type operator*(C lmat, Mat rmat) {
-                        if(lmat.cols() != rmat.rows() || lmat.rows() != rmat.cols()) {
-                            exit(EXIT_FAILURE);
-                        }
+                        if(lmat.cols() != rmat.rows() || lmat.rows() != rmat.cols())
+                            throw std::runtime_error("Invalid matrix dimensions");
                         Matrix<C, T> mat(lmat.rows(), rmat.cols());
                         unsigned i;
                         return mat.map([&i, &lmat, &rmat] (T val, unsigned& x, unsigned& y) {

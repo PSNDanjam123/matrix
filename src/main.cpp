@@ -20,7 +20,6 @@ int main(void) {
     m2(1,1) = 10;
     m2(0,2) = 11;
     m2(1,2) = 12;
-
     m3 += m1 * m2;
 
     std::cout << m1.str() << '\n' << m2.str() << '\n' << m3.str();
