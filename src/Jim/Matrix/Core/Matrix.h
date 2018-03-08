@@ -8,7 +8,7 @@ namespace Jim::Matrix::Core {
     template <class C, typename T>
         class Matrix {
             public:
-                Matrix(unsigned rows, unsigned cols) : _rows(rows), _cols(cols) {
+                Matrix(unsigned cols, unsigned rows) : _rows(rows), _cols(cols) {
                     unsigned r, c;
                     for(r = 0; r < this->_rows; r++) {
                         std::vector<T> row;
@@ -101,6 +101,20 @@ namespace Jim::Matrix::Core {
                 template<typename Num>
                     friend typename std::enable_if<std::is_convertible<Num, T>::value, C>::type operator*(C lmat, Num val2) {
                         return lmat.map([&val2](T val1) {return val1 * val2;});
+                    }
+                template<class Mat>
+                    friend typename std::enable_if<std::is_class<Mat>::value, Matrix<C, T>>::type operator*(C lmat, Mat rmat) {
+                        if(lmat.cols() != rmat.rows() || lmat.rows() != rmat.cols()) {
+                            exit(EXIT_FAILURE);
+                        }
+                        Matrix<C, T> mat(lmat.rows(), rmat.cols());
+                        return mat.map([&lmat, &rmat] (T val, unsigned& x, unsigned& y) {
+                                unsigned i;
+                                for(i = 0; i < lmat.cols(); i++) {
+                                    val += lmat.get(i, y) * lmat(x, i);
+                                }
+                                return val;
+                                });
                     }
                 template<typename Num>
                     friend typename std::enable_if<std::is_convertible<Num, T>::value, C>::type operator*(Num val2, C rmat) {

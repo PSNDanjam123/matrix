@@ -3,12 +3,20 @@
 using namespace Jim::Matrix;
 
 int main(void) {
-    Mat4f m1;
+    Mat<int> m1(3,2);
+    Mat<int> m2(2,3);
+    Mat<int> m3(3,2);
 
+    m1(0,0) = 1;
+    m1(1,0) = 2;
+    m1(2,0) = 3;
+    m1(0,1) = 4;
+    m1(1,1) = 5;
+    m1(2,1) = 6;
 
-    m1 += 4 * m1.identity();
+    m3 += m1.clone() + m1.clone();
 
-    std::cout << m1.str();
+    std::cout << m3.str();
 
     return 0;
 }
