@@ -20,12 +20,10 @@ namespace Jim::Matrix::Core {
                 return this->_matrix[y][x];
             }
             virtual C& forEach(std::function<void (T val, unsigned& x, unsigned& y)> callback) {
-                this->_forEach(callback);
-                return this->_chain();
+                return this->_forEach(callback);
             }
             virtual C& map(std::function<T (T val, unsigned& x, unsigned& y)> callback) {
-                this->_map(callback);
-                return this->_chain();
+                return this->_map(callback);
             }
             virtual C& map(std::function<T (T val)> callback) {
                 return this->map([callback](T val, unsigned&, unsigned&) {return callback(val);});
@@ -91,15 +89,16 @@ namespace Jim::Matrix::Core {
             C& _chain() {
                 return static_cast<C&>(*this);
             }
-            void _forEach(std::function<void (T val, unsigned& x, unsigned& y)> callback) {
+            C& _forEach(std::function<void (T val, unsigned& x, unsigned& y)> callback) {
                 unsigned r, c;
                 for(r = 0; r < this->_rows; r++) {
                     for(c = 0; c < this->_cols; c++)
                         callback(this->_matrix[r][c], c, r);
                 }
+                return this->_chain();
             }
-            void _map(std::function<T (T val, unsigned& x, unsigned& y)> callback) {
-                this->_forEach([this, callback](T val, unsigned& x, unsigned& y) -> T {return this->_matrix[y][x] = callback(val, x, y);});
+            C& _map(std::function<T (T val, unsigned& x, unsigned& y)> callback) {
+                return this->_forEach([this, callback](T val, unsigned& x, unsigned& y) -> T {return this->_matrix[y][x] = callback(val, x, y);});
             }
     };
 }
