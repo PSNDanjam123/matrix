@@ -3,9 +3,9 @@
 using namespace Jim::Core;
 
 int main(void) {
-    Matrix<int> m1(3,2);
+    Matrix<float> m1(3,2);
     Matrix<int> m2(2,3);
-    Matrix<int> m3(2,2);
+    Matrix<float> m3(2,2);
 
     m1.set(0, 0, 1)
         .set(1, 0, 2)
