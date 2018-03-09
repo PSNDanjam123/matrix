@@ -1,29 +1,40 @@
 #include "./Jim/Core/Matrix.h"
 #include <iostream>
+#include <cmath>
 using namespace Jim::Core;
 
+#define PI 3.14159265
+
 int main(void) {
-    Matrix<float> m1(3,2);
-    Matrix<int> m2(2,3);
-    Matrix<float> m3(2,2);
+    //Triangle
+    Matrix<float> p1(4,1);
+    Matrix<float> p2(4,1);
+    Matrix<float> p3(4,1);
 
-    m1.set(0, 0, 1)
-        .set(1, 0, 2)
-        .set(2, 0, 3)
-        .set(0, 1, 4)
-        .set(1, 1, 5)
-        .set(2, 1, 6);
+               //x          //y
+    p1.set(0,0,  1).set(1,0, -1);
+    p2.set(0,0,  0).set(1,0,  1);
+    p3.set(0,0, -1).set(1,0, -1);
 
-    m2.set(0, 0, 7)
-        .set(1, 0, 8)
-        .set(0, 1, 9)
-        .set(1, 1, 10)
-        .set(0, 2, 11)
-        .set(1, 2, 12);
+    //4x4 Matrix
+    Matrix<int> m(4,4);
+    m = m.identity();
 
-    m3 = m1 * m2;
+    int deg = 90;
 
-    std::cout << m1.str() << '\n' << m2.str() << '\n' << m3.str();
+    //Rotate around Z
+    m.set(0,0, std::cos(deg*PI/180));
+    m.set(1,0, -std::sin(deg*PI/180));
+    m.set(0,1, std::sin(deg*PI/180));
+    m.set(1,1, std::cos(deg*PI/180));
+
+    std::cout << p1.str() << p2.str() << p3.str() << '\n';
+
+    p1 = p1 * m;
+    p2 = p2 * m;
+    p3 = p3 * m;
+
+    std::cout << p1.str() << p2.str() << p3.str() << '\n';
 
     return 0;
 }
