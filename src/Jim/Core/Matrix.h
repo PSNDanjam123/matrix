@@ -45,10 +45,27 @@ namespace Jim::Core {
                 T get(unsigned c, unsigned r) {
                     return this->_matrix[r][c];
                 }
+                unsigned cols() {
+                    return this->_cols;
+                }
+                unsigned rows() {
+                    return this->_rows;
+                }
                 Matrix identity() {
                     Matrix<T> identity(this->_cols, this->_rows);
                     return identity.map([](T, unsigned& c, unsigned& r) {return (c == r) ? 1 : 0;});
                 }
+                template <class M>
+                    friend typename std::enable_if<std::is_class<M>::value, Matrix>::type operator*(Matrix& lmat, M& rmat) {
+                        Matrix<T> res(rmat.cols(), lmat.rows());
+                        unsigned i;
+                        return res.map([&i, &lmat, &rmat](T val, unsigned& c, unsigned& r) {
+                                for(i = 0; i < lmat.cols(); i++) {
+                                    val += lmat.get(i, r) * rmat.get(c, i);
+                                }
+                                return val;
+                                });
+                    }
             private:
                 std::vector<std::vector<T>> _matrix;
                 unsigned _cols;
