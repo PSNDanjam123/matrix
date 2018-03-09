@@ -7,6 +7,9 @@
 using namespace Jim::Core;
 
 #define PI 3.141592653
+#define W 1.5
+#define H 1
+#define FRAME_RATE 1666666  //30fps in nanoseconds
 
 struct triangle {
     Matrix<float> p1 = Matrix<float>(1,4);
@@ -56,16 +59,29 @@ void scale(triangle& t, float a) {
 }
 
 void printVertex(Matrix<float>& m, char output) {
-    mvaddch(std::round(m.get(0,1)), std::round(m.get(0,0)), output);
+    mvaddch(std::round(m.get(0,1)), std::round(m.get(0,0) * W), output);
 }
 
 int main(void) {
     initscr();
+    curs_set(0);
 
     float rot = 0;
+    auto t0 = std::chrono::high_resolution_clock::now();
+    std::chrono::milliseconds elapsed;
+    unsigned frame = 0;
+    unsigned fps = 0;
 
     while(true) {
+        auto t1 = std::chrono::high_resolution_clock::now();
+        elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0);
+        if(elapsed.count() % 200 <= 1) {
+            fps = frame / 2;
+            frame = 0;
+        }
+        frame++;
         clear();
+        mvprintw(0,0,std::to_string(fps).c_str());
 
         triangle t;
 
@@ -73,9 +89,9 @@ int main(void) {
         t.p2.set(0,0,  0).set(0,1,  1).set(0,3,1);
         t.p3.set(0,0,  1).set(0,1, -1).set(0,3,1);
 
+        rotateZ(t, rot += 1);
+        translate(t, 2, 2, 0);
         scale(t, 5);
-        rotateZ(t, rot += 0.1);
-        translate(t, 10, 2, 0);
 
         printVertex(t.p1, 'x');
         printVertex(t.p2, 'y');
@@ -83,7 +99,7 @@ int main(void) {
 
         refresh();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::nanoseconds(FRAME_RATE));
     }
 
     endwin();
