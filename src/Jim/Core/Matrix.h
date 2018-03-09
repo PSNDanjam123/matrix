@@ -57,11 +57,11 @@ namespace Jim::Core {
                 }
                 template <class M>
                     friend typename std::enable_if<std::is_class<M>::value, Matrix>::type operator*(Matrix& lmat, M& rmat) {
-                        Matrix<T> res(rmat.cols(), lmat.rows());
+                        Matrix<T> res(lmat.cols(), rmat.rows());
                         unsigned i;
                         return res.map([&i, &lmat, &rmat](T val, unsigned& c, unsigned& r) {
-                                for(i = 0; i < lmat.cols(); i++) {
-                                    val += lmat.get(i, r) * rmat.get(c, i);
+                                for(i = 0; i < rmat.cols(); i++) {
+                                    val += rmat.get(i, r) * lmat.get(c, i);
                                 }
                                 return val;
                                 });
