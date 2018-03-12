@@ -27,6 +27,16 @@ namespace Jim::Core {
                     this->_matrix[r][c] = val;
                     return *this;
                 }
+                unsigned cols() {
+                    return this->_cols;
+                }
+                unsigned rows() {
+                    return this->_rows;
+                }
+                Matrix identity() {
+                    Matrix<BT> identity(this->_cols, this->_rows);
+                    return identity.map([](BT, unsigned& c, unsigned& r) { return (c == r) ? 1 : 0; });
+                }
                 std::string str() {
                     std::stringstream output;
                     this->forEach([this, &output](BT val, unsigned& c, unsigned&) {
@@ -52,8 +62,8 @@ namespace Jim::Core {
                             });
                 }
             private:
-                long unsigned _rows;
-                long unsigned _cols;
+                unsigned _rows;
+                unsigned _cols;
                 std::vector<std::vector<BT>> _matrix;
         };
 }
