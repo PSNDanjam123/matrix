@@ -61,6 +61,19 @@ namespace Jim::Core {
                             this->set(c, r, callback(val, c, r));
                             });
                 }
+                template <typename T>
+                    Matrix& operator*=(Matrix<T>& rmat) {
+                        Matrix<BT> res(rmat.cols(), this->rows());
+                        unsigned i;
+                        res.map([&i, this, &rmat](BT val, unsigned& c, unsigned& r) {
+                                for(i = 0; i < this->cols(); i++) {
+                                val += this->get(i,r) * rmat.get(c,i);
+                                }
+                                return val;
+                                });
+                        *this = res;
+                        return *this;
+                    }
             private:
                 unsigned _rows;
                 unsigned _cols;
