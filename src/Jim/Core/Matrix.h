@@ -74,6 +74,10 @@ namespace Jim::Core {
                         *this = res;
                         return *this;
                     }
+                template <typename T>
+                    friend Matrix operator*(Matrix lmat, Matrix<T>& rmat) {
+                        return lmat *= rmat;
+                    }
             private:
                 unsigned _rows;
                 unsigned _cols;
