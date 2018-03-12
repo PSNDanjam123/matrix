@@ -10,7 +10,8 @@ int main(void) {
 
     m2.set(0,0,1).set(0,1,2).set(0,2,3).set(0,3,1);
 
-    m1 *= m2;
+
+    3 * m2;
 
     std::cout << m1.str();
 
