@@ -62,7 +62,7 @@ namespace Jim::Core {
                             });
                 }
                 template <typename T>
-                    Matrix& operator*=(Matrix<T>& rmat) {
+                    Matrix& operator*=(Matrix<T> rmat) {
                         Matrix<BT> res(rmat.cols(), this->rows());
                         unsigned i;
                         res.map([&i, this, &rmat](BT val, unsigned& c, unsigned& r) {
@@ -75,7 +75,7 @@ namespace Jim::Core {
                         return *this;
                     }
                 template <typename T>
-                    friend Matrix operator*(Matrix lmat, Matrix<T>& rmat) {
+                    friend Matrix operator*(Matrix lmat, Matrix<T> rmat) {
                         return lmat *= rmat;
                     }
                 template <typename N>
@@ -92,14 +92,14 @@ namespace Jim::Core {
                         return rmat *= num;
                     }
                 template <typename T>
-                    Matrix& operator+=(Matrix<T>& rmat) {
+                    Matrix& operator+=(Matrix<T> rmat) {
                         this->map([&rmat](BT val, unsigned& c, unsigned& r) {
                                 return val + rmat.get(c,r);
                                 });
                         return *this;
                     }
                 template <typename T>
-                    friend Matrix operator+(Matrix lmat, Matrix<T>& rmat) {
+                    friend Matrix operator+(Matrix lmat, Matrix<T> rmat) {
                         return lmat += rmat;
                     }
             private:
