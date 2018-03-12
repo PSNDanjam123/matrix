@@ -78,6 +78,17 @@ namespace Jim::Core {
                     friend Matrix operator*(Matrix lmat, Matrix<T>& rmat) {
                         return lmat *= rmat;
                     }
+                template <typename T>
+                    Matrix& operator+=(Matrix<T>& rmat) {
+                        this->map([&rmat](BT val, unsigned& c, unsigned& r) {
+                                return val + rmat.get(c,r);
+                                });
+                        return *this;
+                    }
+                template <typename T>
+                    friend Matrix operator+(Matrix lmat, Matrix<T>& rmat) {
+                        return lmat += rmat;
+                    }
             private:
                 unsigned _rows;
                 unsigned _cols;
