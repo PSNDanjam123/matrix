@@ -102,6 +102,12 @@ namespace Jim::Core {
                     friend Matrix operator+(Matrix lmat, Matrix<T> rmat) {
                         return lmat += rmat;
                     }
+                template <typename N>
+                    typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix&> operator+=(N num) {
+                        this->map([&num](BT val, unsigned&, unsigned&) {
+                                return val + num;
+                                });
+                    }
             private:
                 unsigned _rows;
                 unsigned _cols;
