@@ -7,7 +7,7 @@ namespace Jim::Core {
     template <typename BT>  //Base Type
         class Matrix {
             public:
-                Matrix(unsigned rows, unsigned cols) {
+                Matrix(unsigned cols, unsigned rows) {
                     this->resize(cols, rows);
                 }
                 Matrix& resize(unsigned cols, unsigned rows) {

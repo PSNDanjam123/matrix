@@ -8,8 +8,9 @@ int main(void) {
 
     m1 = m1.identity();
 
-    std::cout << m1.str();
+    m2.set(0,0,1).set(0,1,2).set(0,2,3).set(0,3,1);
 
+    std::cout << m2.str();
 
     return 0;
 }
