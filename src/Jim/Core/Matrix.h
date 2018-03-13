@@ -71,14 +71,14 @@ namespace Jim::Core {
                             });
                 }
                 template <typename T>
-                    Matrix convertList(std::initializer_list<T> list) {
+                    static Matrix convertList(std::initializer_list<T> list) {
                         Matrix<BT> mat(list.size(), 1);
                         return mat.map([list](BT, unsigned& c, unsigned&) {
                                 return list.begin()[c];
                                 });
                     }
                 template <typename T>
-                    Matrix convertList(std::initializer_list<std::initializer_list<T>> list) {
+                    static Matrix convertList(std::initializer_list<std::initializer_list<T>> list) {
                         unsigned cols = list.begin()[0].size();
                         for(auto& item : list) {
                             if(cols != item.size()) {
@@ -90,6 +90,14 @@ namespace Jim::Core {
                                 return list.begin()[r].begin()[c];
                                 });
                         return mat;
+                    }
+                template <typename T>
+                    Matrix& operator*=(std::initializer_list<T> list) {
+                        return operator*=(this->convertList(list));
+                    }
+                template <typename T>
+                    Matrix& operator*=(std::initializer_list<std::initializer_list<T>> list) {
+                        return operator*=(this->convertList(list));
                     }
                 template <typename T>
                     Matrix& operator*=(Matrix<T> rmat) {
