@@ -96,6 +96,9 @@ namespace Jim::Core {
                     }
                 template <typename T>
                     Matrix& operator+=(Matrix<T> rmat) {
+                        if(this->rows() != rmat.rows() || this->cols() != rmat.cols()) {
+                            throw std::runtime_error("Matrices cannot be added because they have different dimensions");
+                        }
                         this->map([&rmat](BT val, unsigned& c, unsigned& r) {
                                 return val + rmat.get(c,r);
                                 });
