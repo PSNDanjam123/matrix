@@ -123,6 +123,35 @@ namespace Jim::Core {
                     friend typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix> operator+(N num, Matrix rmat) {
                         return rmat += num;
                     }
+                 template <typename T>
+                    Matrix& operator-=(Matrix<T> rmat) {
+                        if(this->rows() != rmat.rows() || this->cols() != rmat.cols()) {
+                            throw std::runtime_error("Matrices cannot be subtracted because they have different dimensions");
+                        }
+                        this->map([&rmat](BT val, unsigned& c, unsigned& r) {
+                                return val - rmat.get(c,r);
+                                });
+                        return *this;
+                    }
+                template <typename T>
+                    friend Matrix operator-(Matrix lmat, Matrix<T> rmat) {
+                        return lmat -= rmat;
+                    }
+                template <typename N>
+                    typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix&> operator-=(N num) {
+                        this->map([&num](BT val, unsigned&, unsigned&) {
+                                return val - num;
+                                });
+                        return *this;
+                    }
+                template <typename N>
+                    friend typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix> operator-(Matrix lmat, N num) {
+                        return lmat -= num;
+                    }
+                template <typename N>
+                    friend typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix> operator-(N num, Matrix rmat) {
+                        return rmat -= num;
+                    }
             private:
                 unsigned _rows;
                 unsigned _cols;
