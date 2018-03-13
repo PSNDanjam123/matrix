@@ -3,12 +3,9 @@
 using namespace Jim::Core;
 
 int main(void) {
-    Matrix<int> m1(4,4);
-    m1 = m1.identity();
+    Matrix<int> m1;
 
-    m1 *= 2;
-
-    m1 *= {{1},{2},{3},{1}};
+    m1 = {1,2,3,5};
 
     std::cout << m1.str();
 

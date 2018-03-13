@@ -133,6 +133,14 @@ namespace Jim::Core {
                         return rmat *= num;
                     }
                 template <typename T>
+                    Matrix& operator+=(std::initializer_list<T> list) {
+                        return this->operator+=(this->convertList(list));
+                    }
+                template <typename T>
+                    Matrix& operator+=(std::initializer_list<std::initializer_list<T>> list) {
+                        return this->operator+=(this->convertList(list));
+                    }
+                template <typename T>
                     Matrix& operator+=(Matrix<T> rmat) {
                         if(this->rows() != rmat.rows() || this->cols() != rmat.cols()) {
                             throw std::runtime_error("Matrices cannot be added because they have different dimensions");
@@ -162,6 +170,14 @@ namespace Jim::Core {
                         return rmat += num;
                     }
                 template <typename T>
+                    Matrix& operator-=(std::initializer_list<T> list) {
+                        return this->operator-=(this->convertList(list));
+                    }
+                template <typename T>
+                    Matrix& operator-=(std::initializer_list<std::initializer_list<T>> list) {
+                        return this->operator-=(this->convertList(list));
+                    }
+                template <typename T>
                     Matrix& operator-=(Matrix<T> rmat) {
                         if(this->rows() != rmat.rows() || this->cols() != rmat.cols()) {
                             throw std::runtime_error("Matrices cannot be subtracted because they have different dimensions");
@@ -189,6 +205,14 @@ namespace Jim::Core {
                 template <typename N>
                     friend typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix> operator-(N num, Matrix rmat) {
                         return rmat -= num;
+                    }
+                template <typename T>
+                    Matrix& operator=(std::initializer_list<T> list) {
+                        return this->operator=(this->convertList(list));
+                    }
+                template <typename T>
+                    Matrix& operator=(std::initializer_list<std::initializer_list<T>> list) {
+                        return this->operator=(this->convertList(list));
                     }
                 template <typename T>
                     Matrix& operator=(Matrix<T> rmat) {
