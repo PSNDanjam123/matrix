@@ -161,7 +161,9 @@ namespace Jim::Core {
                 template <typename T>
                     Matrix& operator=(Matrix<T> rmat) {
                         this->resize(rmat.cols(), rmat.rows());
-                        this->map([&rmat](BT, unsigned& c, unsigned& r) {return rmat.get(c,r);});
+                        this->map([&rmat](BT, unsigned& c, unsigned& r) {
+                                return rmat.get(c,r);
+                                });
                         return *this;
                     }
                 template <typename N>
