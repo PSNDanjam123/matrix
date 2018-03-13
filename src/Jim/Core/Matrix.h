@@ -63,6 +63,9 @@ namespace Jim::Core {
                 }
                 template <typename T>
                     Matrix& operator*=(Matrix<T> rmat) {
+                        if(this->cols() != rmat.rows()) {
+                            throw std::runtime_error("Matrices cannot be multiplied because of row/col mismatch");
+                        }
                         Matrix<BT> res(rmat.cols(), this->rows());
                         unsigned i;
                         res.map([&i, this, &rmat](BT val, unsigned& c, unsigned& r) {
