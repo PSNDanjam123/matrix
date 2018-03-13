@@ -21,9 +21,15 @@ namespace Jim::Core {
                     return *this;
                 }
                 BT get(unsigned c, unsigned r) {
+                    if(c >= this->cols() || r >= this->rows()) {
+                        throw std::runtime_error("Cannot get because col/row is out of range");
+                    }
                     return this->_matrix[r][c];
                 }
                 Matrix& set(unsigned c, unsigned r, BT val) {
+                    if(c >= this->cols() || r >= this->rows()) {
+                        throw std::runtime_error("Cannot set because col/row is out of range");;
+                    }
                     this->_matrix[r][c] = val;
                     return *this;
                 }
