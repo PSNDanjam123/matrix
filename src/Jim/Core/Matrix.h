@@ -158,6 +158,19 @@ namespace Jim::Core {
                     friend typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix> operator-(N num, Matrix rmat) {
                         return rmat -= num;
                     }
+                template <typename T>
+                    Matrix& operator=(Matrix<T> rmat) {
+                        this->resize(rmat.cols(), rmat.rows());
+                        this->map([&rmat](BT, unsigned& c, unsigned& r) {return rmat.get(c,r);});
+                        return *this;
+                    }
+                template <typename N>
+                    typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix&> operator=(N num) {
+                        this->map([&num](BT, unsigned&, unsigned&) {
+                                return num;
+                                });
+                        return *this;
+                    }
             private:
                 unsigned _rows;
                 unsigned _cols;
