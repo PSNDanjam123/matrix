@@ -7,6 +7,9 @@ namespace Jim::Core {
     template <typename BT>  //Base Type
         class Matrix {
             public:
+                Matrix() {
+                    this->resize(0,0);
+                }
                 Matrix(unsigned cols, unsigned rows) {
                     this->resize(cols, rows);
                 }
@@ -67,6 +70,27 @@ namespace Jim::Core {
                             this->set(c, r, callback(val, c, r));
                             });
                 }
+                template <typename T>
+                    Matrix convertList(std::initializer_list<T> list) {
+                        Matrix<BT> mat(list.size(), 1);
+                        return mat.map([list](BT, unsigned& c, unsigned&) {
+                                return list.begin()[c];
+                                });
+                    }
+                template <typename T>
+                    Matrix convertList(std::initializer_list<std::initializer_list<T>> list) {
+                        unsigned cols = list.begin()[0].size();
+                        for(auto& item : list) {
+                            if(cols != item.size()) {
+                                throw std::runtime_error("Matrix rows do not have the same number of columns");
+                            }
+                        }
+                        Matrix<BT> mat(cols, list.size());
+                        mat.map([&list] (BT, unsigned& c, unsigned& r) {
+                                return list.begin()[r].begin()[c];
+                                });
+                        return mat;
+                    }
                 template <typename T>
                     Matrix& operator*=(Matrix<T> rmat) {
                         if(this->cols() != rmat.rows()) {
@@ -129,7 +153,7 @@ namespace Jim::Core {
                     friend typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix> operator+(N num, Matrix rmat) {
                         return rmat += num;
                     }
-                 template <typename T>
+                template <typename T>
                     Matrix& operator-=(Matrix<T> rmat) {
                         if(this->rows() != rmat.rows() || this->cols() != rmat.cols()) {
                             throw std::runtime_error("Matrices cannot be subtracted because they have different dimensions");
