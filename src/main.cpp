@@ -3,11 +3,18 @@
 using namespace Jim::Core;
 
 int main(void) {
-    Matrix<int> m1;
+    Matrix<int> m1 = {
+        {1,0,0,0},
+        {0,1,0,0},
+        {0,0,1,0},
+        {0,0,0,1}
+    };
 
-    m1 = {1,2,3,5};
+    Matrix<float> m2 = {{1.1},{3.0},{4.0},{6.5}};
 
-    std::cout << m1.str();
+    Matrix<float> m3 = (Matrix<float>)m1 * m2;
+
+    std::cout << m3.str();
 
     return 0;
 }

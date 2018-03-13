@@ -13,6 +13,18 @@ namespace Jim::Core {
                 Matrix(unsigned cols, unsigned rows) {
                     this->resize(cols, rows);
                 }
+                template <typename T>
+                    Matrix(std::initializer_list<T> list) {
+                        this->operator=(list);
+                    }
+                template <typename T>
+                    Matrix(std::initializer_list<std::initializer_list<T>> list) {
+                        this->operator=(list);
+                    }
+                template <typename T>
+                    Matrix(Matrix<T> mat) {
+                        this->operator=(mat);
+                    }
                 Matrix& resize(unsigned cols, unsigned rows) {
                     this->_cols = cols;
                     this->_rows = rows;
