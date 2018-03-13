@@ -107,6 +107,15 @@ namespace Jim::Core {
                         this->map([&num](BT val, unsigned&, unsigned&) {
                                 return val + num;
                                 });
+                        return *this;
+                    }
+                template <typename N>
+                    friend typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix> operator+(Matrix lmat, N num) {
+                        return lmat += num;
+                    }
+                template <typename N>
+                    friend typename std::enable_if_t<std::is_arithmetic_v<N>, Matrix> operator+(N num, Matrix rmat) {
+                        return rmat += num;
                     }
             private:
                 unsigned _rows;
