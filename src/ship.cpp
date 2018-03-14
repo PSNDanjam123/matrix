@@ -82,11 +82,16 @@ float Ship::radToDeg(float rad) {
 }
 
 void Ship::threadRender() {
+    float consoleHeight = 1;
+    float consoleWidth = 1.5;
+
     int world_x, world_y;
     {
         lock_guard<mutex> lock(ncurseMutex);
         getmaxyx(stdscr, world_y, world_x);
     }
+
+    Ship::setPos(Ship::USS_Ent.object, world_x / 2, world_y / 2, 0);
 
     while(true) {
         string info = "";
@@ -103,9 +108,9 @@ void Ship::threadRender() {
         {
             lock_guard<mutex> lock(ncurseMutex);
             clear();
-            mvaddch(x.get(0,0), x.get(0,1), 'x');
-            mvaddch(y.get(0,0), y.get(0,1), 'y');
-            mvaddch(z.get(0,0), z.get(0,1), 'z');
+            mvaddch(consoleHeight * x.get(0,1), consoleWidth * x.get(0,0), 'o');
+            mvaddch(consoleHeight * y.get(0,1), consoleWidth * y.get(0,0), 'O');
+            mvaddch(consoleHeight * z.get(0,1), consoleWidth * z.get(0,0), 'o');
             mvprintw(0,0, info.c_str());
             refresh();
         }
@@ -168,10 +173,10 @@ void Ship::threadInput() {
                 return;
             } else if(ch == 'w' || ch == 'a' || ch == 's' || ch == 'd') {   //Move
                 switch(ch) {
-                    case 'w':
+                    case 's':
                         axis = {{ 0},{-1},{ 0},{ 0}};
                         break;
-                    case 's':
+                    case 'w':
                         axis = {{ 0},{ 1},{ 0},{ 0}};
                         break;
                     case 'a':
