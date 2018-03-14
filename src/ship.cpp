@@ -105,7 +105,7 @@ void Ship::threadRender() {
                 info += "DAM:  \t";
             }
 
-            info += "\tCONROLS: move=w/a/s/d;rotate=q/e;";
+            info += "\tCONROLS: move=w/a/s/d;rotate=q/e;dampener=i;";
 
             c = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.c;
             x = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.x;
