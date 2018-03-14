@@ -40,9 +40,7 @@ void Ship::init() {
 }
 
 void Ship::setPos(Ship::object& obj, float x, float y, float z) {
-    obj.matrix.set(3,0,x);
-    obj.matrix.set(3,1,y);
-    obj.matrix.set(3,2,z);
+    Ship::translate(obj, -obj.translation.get(3,0) + x, -obj.translation.get(3,1) + y, -obj.translation.get(3,2) + z);
 }
 
 void Ship::rotate(Ship::object& obj, float deg) {
@@ -86,7 +84,7 @@ float Ship::radToDeg(float rad) {
 
 void Ship::threadRender() {
     float consoleHeight = 1;
-    float consoleWidth = 1.5;
+    float consoleWidth = 2;
 
     int world_x, world_y;
     {
@@ -94,7 +92,7 @@ void Ship::threadRender() {
         getmaxyx(stdscr, world_y, world_x);
     }
 
-    Ship::setPos(Ship::USS_Ent.object, world_x / 2, world_y / 2, 0);
+    Ship::setPos(Ship::USS_Ent.object, world_x / consoleWidth / 2, world_y / consoleHeight / 2, 0);
 
     while(true) {
         string info = "";
@@ -113,9 +111,9 @@ void Ship::threadRender() {
             lock_guard<mutex> lock(ncurseMutex);
             clear();
             mvaddch(consoleHeight * c.get(0,1), consoleWidth * c.get(0,0), 'x');
-            mvaddch(consoleHeight * x.get(0,1), consoleWidth * x.get(0,0), 'o');
-            mvaddch(consoleHeight * y.get(0,1), consoleWidth * y.get(0,0), 'O');
-            mvaddch(consoleHeight * z.get(0,1), consoleWidth * z.get(0,0), 'o');
+            mvaddch(consoleHeight * x.get(0,1), consoleWidth * x.get(0,0), 'O');
+            mvaddch(consoleHeight * y.get(0,1), consoleWidth * y.get(0,0), '@');
+            mvaddch(consoleHeight * z.get(0,1), consoleWidth * z.get(0,0), 'O');
             mvprintw(0,0, info.c_str());
             refresh();
         }
