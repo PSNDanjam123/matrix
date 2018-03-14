@@ -106,6 +106,19 @@ void Ship::threadRender() {
             x = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.x;
             y = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.y;
             z = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.z;
+
+            if(c.get(0,0) * consoleWidth > world_x) {
+                Ship::setPos(Ship::USS_Ent.object, 0, c.get(0,1), c.get(0,2));
+            } else if(c.get(0,0) < 0) {
+                Ship::setPos(Ship::USS_Ent.object, world_x / consoleWidth, c.get(0,1), c.get(0,2));
+            }
+
+            if(c.get(0,1) * consoleHeight > world_y) {
+                Ship::setPos(Ship::USS_Ent.object, c.get(0,0), 0, c.get(0,2));
+            } else if(c.get(0,1) < 0) {
+                Ship::setPos(Ship::USS_Ent.object, c.get(0,0), world_y / consoleHeight, c.get(0,2));
+            }
+
         }
         {
             lock_guard<mutex> lock(ncurseMutex);
@@ -176,10 +189,10 @@ void Ship::threadInput() {
                 return;
             } else if(ch == 'w' || ch == 'a' || ch == 's' || ch == 'd') {   //Move
                 switch(ch) {
-                    case 's':
+                    case 'w':
                         axis = {{ 0},{-1},{ 0},{ 0}};
                         break;
-                    case 'w':
+                    case 's':
                         axis = {{ 0},{ 1},{ 0},{ 0}};
                         break;
                     case 'a':
