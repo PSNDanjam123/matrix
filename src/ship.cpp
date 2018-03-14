@@ -99,8 +99,11 @@ void Ship::threadRender() {
         Matrix<float> c, x, y ,z;
         {
             lock_guard<mutex> lock(modify);
-            info += "MPH: " + to_string(Ship::USS_Ent.force.get(0,0) + Ship::USS_Ent.force.get(0,1) + Ship::USS_Ent.force.get(0,2)) + ", ";
-            info += "DAM: " + to_string(Ship::USS_Ent.dampener == true ? '#' : ' ') + ", ";
+            if(Ship::USS_Ent.dampener == true) {
+                info += "DAM: #, ";
+            } else {
+                info += "DAM:  , ";
+            }
 
             c = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.c;
             x = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.x;
