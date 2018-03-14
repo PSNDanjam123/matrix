@@ -124,7 +124,7 @@ void Ship::threadSimulate() {
             }
 
             if(Ship::USS_Ent.dampener == true) {
-                float dampen = Ship::USS_Ent.thrust;
+                float dampen = Ship::USS_Ent.thrust / 10;
                 float& spin = Ship::USS_Ent.spin;
                 Matrix<float>& force = Ship::USS_Ent.force;
                 float x = force.get(0,0);
