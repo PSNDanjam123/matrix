@@ -1,10 +1,13 @@
 #pragma once
+#include <mutex>
 #include "./Jim/Core/Matrix.h"
 using namespace Jim::Core;
 
 #define PI 3.141592
 
 namespace Ship {
+    extern std::mutex ncurseMutex;
+
     extern bool running;   //App status
 
     typedef struct object {
@@ -43,7 +46,7 @@ namespace Ship {
     typedef struct ship {
         Ship::object    object;
         Matrix<float>   force = {{0},{0},{0},{0}};
-        float           thrust = 0.05;
+        float           thrust = 0.005;
         float           spin = 0;
         bool            dampener = false;
     } ship;

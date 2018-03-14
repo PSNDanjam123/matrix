@@ -2,19 +2,26 @@
 
 #include <cmath>
 #include <thread>
+#include <mutex>
 #include <chrono>
 #include <ncurses.h>
 
 using namespace std;
+
+mutex Ship::ncurseMutex;
 
 bool Ship::running = true;
 
 Ship::ship Ship::USS_Ent;
 
 void Ship::init() {
-    initscr();
-    curs_set(0);
-    noecho();
+    {
+        std::lock_guard<mutex> lock(Ship::ncurseMutex);
+        initscr();
+        curs_set(0);
+        noecho();
+        timeout(0);
+    }
 
     thread re(Ship::threadRender);
     thread si(Ship::threadSimulate);
@@ -24,6 +31,7 @@ void Ship::init() {
     si.join();
     in.join();
 
+    std::lock_guard<mutex> locak(Ship::ncurseMutex);
     endwin();
 }
 
@@ -67,34 +75,49 @@ float Ship::radToDeg(float rad) {
 }
 
 void Ship::threadRender() {
-    while(true) {
-        Matrix<int> x = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.x;
-        Matrix<int> y = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.y;
-        Matrix<int> z = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.z;
+    int world_x, world_y;
+    {
+        lock_guard<mutex> lock(ncurseMutex);
+        getmaxyx(stdscr, world_y, world_x);
+    }
 
-        clear();
-        mvaddch(x.get(0,0), x.get(0,1), 'o');
-        mvaddch(y.get(0,0), y.get(0,1), 'O');
-        mvaddch(z.get(0,0), z.get(0,1), 'o');
-        refresh();
+    while(true) {
+        string info = "";
+
+        info += "MPH: " + to_string(Ship::USS_Ent.force.get(0,0) + Ship::USS_Ent.force.get(0,1) + Ship::USS_Ent.force.get(0,2)) + ", ";
+        info += "DAM: " + to_string(Ship::USS_Ent.dampener == true ? '#' : ' ') + ", ";
+
+        Matrix<float> x = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.x;
+        Matrix<float> y = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.y;
+        Matrix<float> z = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.z;
+
+        {
+            lock_guard<mutex> lock(ncurseMutex);
+            clear();
+            mvaddch(x.get(0,0), x.get(0,1), 'x');
+            mvaddch(y.get(0,0), y.get(0,1), 'y');
+            mvaddch(z.get(0,0), z.get(0,1), 'z');
+            mvprintw(0,0, info.c_str());
+            refresh();
+        }
 
         this_thread::sleep_for(chrono::milliseconds(33));
     }
 }
 
 void Ship::threadSimulate() {
+
     while(true) {
         if(Ship::running == false) {
             return;
         }
 
         if(Ship::USS_Ent.dampener == true) {
-            float dampen = Ship::USS_Ent.thrust / 2;
+            float dampen = Ship::USS_Ent.thrust;
             float& spin = Ship::USS_Ent.spin;
             Matrix<float>& force = Ship::USS_Ent.force;
             float x = force.get(0,0);
             float y = force.get(0,1);
-            float z = force.get(0,2);
             if(spin != 0) {
                 spin += dampen * ((spin > 0) ? -1 : 1);
             }
@@ -102,16 +125,13 @@ void Ship::threadSimulate() {
                 force.set(0,0,dampen * ((x > 0) ? -1 : 1) + x);
             }
             if(y != 0) {
-                force.set(0,1,dampen * ((x > 0) ? -1 : 1) + y);
-            }
-            if(z != 0) {
-                force.set(0,2,dampen * ((x > 0) ? -1 : 1) + z);
+                force.set(0,1,dampen * ((y > 0) ? -1 : 1) + y);
             }
         }
 
         Ship::translate(Ship::USS_Ent.object, Ship::USS_Ent.force.get(0,0), Ship::USS_Ent.force.get(0,1), Ship::USS_Ent.force.get(0,2));
         Ship::rotate(Ship::USS_Ent.object, Ship::USS_Ent.spin);
-        Ship::USS_Ent.object.matrix = Ship::USS_Ent.object.translation * Ship::USS_Ent.object.rotation;
+        Ship::USS_Ent.object.matrix = Ship::USS_Ent.object.scale * Ship::USS_Ent.object.translation * Ship::USS_Ent.object.rotation;
         this_thread::sleep_for(chrono::milliseconds(5));
     }
 }
@@ -125,7 +145,10 @@ void Ship::threadInput() {
         if(Ship::running == false) {
             return;
         }
-        ch = getch();
+        {
+            lock_guard<mutex> lock(ncurseMutex);
+            ch = getch();
+        }
         if(ch == 'f') { //Quit
             Ship::running = false;
             return;
