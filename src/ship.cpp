@@ -27,11 +27,14 @@ void Ship::init() {
     thread re(Ship::threadRender);
     thread si(Ship::threadSimulate);
     thread in(Ship::threadInput);
+    thread in2(Ship::threadInput);
 
     re.join();
     si.join();
     in.join();
+    in2.join();
 
+    running = false;
     std::lock_guard<mutex> locak(Ship::ncurseMutex);
     endwin();
 }
@@ -95,12 +98,13 @@ void Ship::threadRender() {
 
     while(true) {
         string info = "";
-        Matrix<float> x, y ,z;
+        Matrix<float> c, x, y ,z;
         {
             lock_guard<mutex> lock(modify);
             info += "MPH: " + to_string(Ship::USS_Ent.force.get(0,0) + Ship::USS_Ent.force.get(0,1) + Ship::USS_Ent.force.get(0,2)) + ", ";
             info += "DAM: " + to_string(Ship::USS_Ent.dampener == true ? '#' : ' ') + ", ";
 
+            c = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.c;
             x = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.x;
             y = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.y;
             z = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.z;
@@ -108,6 +112,7 @@ void Ship::threadRender() {
         {
             lock_guard<mutex> lock(ncurseMutex);
             clear();
+            mvaddch(consoleHeight * c.get(0,1), consoleWidth * c.get(0,0), 'x');
             mvaddch(consoleHeight * x.get(0,1), consoleWidth * x.get(0,0), 'o');
             mvaddch(consoleHeight * y.get(0,1), consoleWidth * y.get(0,0), 'O');
             mvaddch(consoleHeight * z.get(0,1), consoleWidth * z.get(0,0), 'o');
@@ -135,7 +140,7 @@ void Ship::threadSimulate() {
                 float x = force.get(0,0);
                 float y = force.get(0,1);
                 if(spin != 0) {
-                    spin += dampen * ((spin > 0) ? -1 : 1);
+                    spin += dampen * ((spin > 0) ? -1 : 1) * 2;
                 }
                 if(x != 0) {
                     force.set(0,0,dampen * ((x > 0) ? -1 : 1) + x);
@@ -190,10 +195,10 @@ void Ship::threadInput() {
             } else if(ch == 'q' || ch == 'e') { //Rotate
                 switch(ch) {
                     case 'q':
-                        Ship::USS_Ent.spin -= Ship::USS_Ent.thrust;
+                        Ship::USS_Ent.spin -= Ship::USS_Ent.thrust * 3;
                         break;
                     case 'e':
-                        Ship::USS_Ent.spin += Ship::USS_Ent.thrust;
+                        Ship::USS_Ent.spin += Ship::USS_Ent.thrust * 3;
                         break;
                 }
             } else if(ch == 'i' && prevCh != ch) {  //Toggle Dampener

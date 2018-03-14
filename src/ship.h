@@ -13,6 +13,7 @@ namespace Ship {
 
     typedef struct object {
         //vertices
+        Matrix<float> c = {{ 0},{ 0},{ 0},{ 1}};
         Matrix<float> x = {{-1},{-1},{ 0},{ 1}};
         Matrix<float> y = {{ 0},{ 1},{ 0},{ 1}};
         Matrix<float> z = {{ 1},{-1},{ 0},{ 1}};
