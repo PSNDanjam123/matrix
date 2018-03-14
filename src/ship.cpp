@@ -100,10 +100,12 @@ void Ship::threadRender() {
         {
             lock_guard<mutex> lock(modify);
             if(Ship::USS_Ent.dampener == true) {
-                info += "DAM: #, ";
+                info += "DAM: #\t";
             } else {
-                info += "DAM:  , ";
+                info += "DAM:  \t";
             }
+
+            info += "\tCONROLS: move=w/a/s/d;rotate=q/e;";
 
             c = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.c;
             x = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.x;
