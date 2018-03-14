@@ -1,6 +1,6 @@
 #pragma once
 #include <mutex>
-#include "./Jim/Core/Matrix.h"
+#include "../Jim/Core/Matrix.h"
 using namespace Jim::Core;
 
 #define PI 3.141592
