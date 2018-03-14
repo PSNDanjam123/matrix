@@ -11,6 +11,9 @@ using namespace std;
 
 bool running = true;
 
+Matrix<float> force = {{0},{0},{0},{0}};
+Matrix<float> spin = {{0},{0},{0},{0}};
+
 struct object {
     Matrix<float> x = {{-1},{-1},{0},{1}};
     Matrix<float> y = {{0},{1},{0},{1}};
@@ -61,6 +64,7 @@ void render() {
         if(running != true) {
             return;
         }
+        translate(obj, force.get(0,0), force.get(0,1), force.get(0,2));
         obj.mat = obj.pos * obj.rot;
         clear();
         Matrix<int> x = obj.mat * obj.x;
@@ -87,6 +91,7 @@ void input() {
             break;
         } else if(ch == 'w' || ch == 'a' || ch == 's' || ch == 'd') {
             Matrix<float> axis;
+            float m = 0.05;
             switch(ch) {
                 case 'w':
                     axis = {{0},{1},{0},{0}};
@@ -101,16 +106,20 @@ void input() {
                     axis = {{1},{0},{0},{0}};
                     break;
             };
-            axis = obj.mat * axis;
-            translate(obj, axis.get(0,0), axis.get(0,1), axis.get(0,2));
+            axis = axis * m;
+            force += obj.mat * axis;
         } else if(ch == 'q' || ch == 'e') {
+            Matrix<float> axis;
             switch(ch) {
                 case 'q':
-                    rotate(obj, -1);
+                    axis = {{0},{0},{-1},{0}};
                     break;
                 case 'e':
-                    rotate(obj, 1);
+                    axis = {{0},{0},{1},{0}};
             }
+            float m = 0.05;
+            axis = axis * m;
+            spin += obj.mat * spin;
         }
     }
 }
