@@ -9,6 +9,7 @@
 using namespace std;
 
 mutex Ship::ncurseMutex;
+mutex Ship::modify;
 
 bool Ship::running = true;
 
@@ -33,6 +34,12 @@ void Ship::init() {
 
     std::lock_guard<mutex> locak(Ship::ncurseMutex);
     endwin();
+}
+
+void Ship::setPos(Ship::object& obj, float x, float y, float z) {
+    obj.matrix.set(3,0,x);
+    obj.matrix.set(3,1,y);
+    obj.matrix.set(3,2,z);
 }
 
 void Ship::rotate(Ship::object& obj, float deg) {
@@ -83,14 +90,16 @@ void Ship::threadRender() {
 
     while(true) {
         string info = "";
+        Matrix<float> x, y ,z;
+        {
+            lock_guard<mutex> lock(modify);
+            info += "MPH: " + to_string(Ship::USS_Ent.force.get(0,0) + Ship::USS_Ent.force.get(0,1) + Ship::USS_Ent.force.get(0,2)) + ", ";
+            info += "DAM: " + to_string(Ship::USS_Ent.dampener == true ? '#' : ' ') + ", ";
 
-        info += "MPH: " + to_string(Ship::USS_Ent.force.get(0,0) + Ship::USS_Ent.force.get(0,1) + Ship::USS_Ent.force.get(0,2)) + ", ";
-        info += "DAM: " + to_string(Ship::USS_Ent.dampener == true ? '#' : ' ') + ", ";
-
-        Matrix<float> x = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.x;
-        Matrix<float> y = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.y;
-        Matrix<float> z = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.z;
-
+            x = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.x;
+            y = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.y;
+            z = Ship::USS_Ent.object.matrix * Ship::USS_Ent.object.z;
+        }
         {
             lock_guard<mutex> lock(ncurseMutex);
             clear();
@@ -108,30 +117,33 @@ void Ship::threadRender() {
 void Ship::threadSimulate() {
 
     while(true) {
-        if(Ship::running == false) {
-            return;
-        }
+        {
+            lock_guard<mutex> lock(modify);
+            if(Ship::running == false) {
+                return;
+            }
 
-        if(Ship::USS_Ent.dampener == true) {
-            float dampen = Ship::USS_Ent.thrust;
-            float& spin = Ship::USS_Ent.spin;
-            Matrix<float>& force = Ship::USS_Ent.force;
-            float x = force.get(0,0);
-            float y = force.get(0,1);
-            if(spin != 0) {
-                spin += dampen * ((spin > 0) ? -1 : 1);
+            if(Ship::USS_Ent.dampener == true) {
+                float dampen = Ship::USS_Ent.thrust;
+                float& spin = Ship::USS_Ent.spin;
+                Matrix<float>& force = Ship::USS_Ent.force;
+                float x = force.get(0,0);
+                float y = force.get(0,1);
+                if(spin != 0) {
+                    spin += dampen * ((spin > 0) ? -1 : 1);
+                }
+                if(x != 0) {
+                    force.set(0,0,dampen * ((x > 0) ? -1 : 1) + x);
+                }
+                if(y != 0) {
+                    force.set(0,1,dampen * ((y > 0) ? -1 : 1) + y);
+                }
             }
-            if(x != 0) {
-                force.set(0,0,dampen * ((x > 0) ? -1 : 1) + x);
-            }
-            if(y != 0) {
-                force.set(0,1,dampen * ((y > 0) ? -1 : 1) + y);
-            }
-        }
 
-        Ship::translate(Ship::USS_Ent.object, Ship::USS_Ent.force.get(0,0), Ship::USS_Ent.force.get(0,1), Ship::USS_Ent.force.get(0,2));
-        Ship::rotate(Ship::USS_Ent.object, Ship::USS_Ent.spin);
-        Ship::USS_Ent.object.matrix = Ship::USS_Ent.object.scale * Ship::USS_Ent.object.translation * Ship::USS_Ent.object.rotation;
+            Ship::translate(Ship::USS_Ent.object, Ship::USS_Ent.force.get(0,0), Ship::USS_Ent.force.get(0,1), Ship::USS_Ent.force.get(0,2));
+            Ship::rotate(Ship::USS_Ent.object, Ship::USS_Ent.spin);
+            Ship::USS_Ent.object.matrix = Ship::USS_Ent.object.scale * Ship::USS_Ent.object.translation * Ship::USS_Ent.object.rotation;
+        }
         this_thread::sleep_for(chrono::milliseconds(5));
     }
 }
@@ -142,45 +154,48 @@ void Ship::threadInput() {
     Matrix<float> axis;
 
     while(true) {
-        if(Ship::running == false) {
-            return;
-        }
         {
-            lock_guard<mutex> lock(ncurseMutex);
-            ch = getch();
-        }
-        if(ch == 'f') { //Quit
-            Ship::running = false;
-            return;
-        } else if(ch == 'w' || ch == 'a' || ch == 's' || ch == 'd') {   //Move
-            switch(ch) {
-                case 'w':
-                    axis = {{ 0},{-1},{ 0},{ 0}};
-                    break;
-                case 's':
-                    axis = {{ 0},{ 1},{ 0},{ 0}};
-                    break;
-                case 'a':
-                    axis = {{-1},{ 0},{ 0},{ 0}};
-                    break;
-                case 'd':
-                    axis = {{ 1},{ 0},{ 0},{ 0}};
-                    break;
+            lock_guard<mutex> lock(modify);
+            if(Ship::running == false) {
+                return;
             }
-            Ship::USS_Ent.force += Ship::USS_Ent.object.matrix * axis * Ship::USS_Ent.thrust;
-        } else if(ch == 'q' || ch == 'e') { //Rotate
-            switch(ch) {
-                case 'q':
-                    Ship::USS_Ent.spin -= Ship::USS_Ent.thrust;
-                    break;
-                case 'e':
-                    Ship::USS_Ent.spin += Ship::USS_Ent.thrust;
-                    break;
+            {
+                lock_guard<mutex> lock(ncurseMutex);
+                ch = getch();
             }
-        } else if(ch == 'i' && prevCh != ch) {  //Toggle Dampener
-            Ship::USS_Ent.dampener = !Ship::USS_Ent.dampener;
+            if(ch == 'f') { //Quit
+                Ship::running = false;
+                return;
+            } else if(ch == 'w' || ch == 'a' || ch == 's' || ch == 'd') {   //Move
+                switch(ch) {
+                    case 'w':
+                        axis = {{ 0},{-1},{ 0},{ 0}};
+                        break;
+                    case 's':
+                        axis = {{ 0},{ 1},{ 0},{ 0}};
+                        break;
+                    case 'a':
+                        axis = {{-1},{ 0},{ 0},{ 0}};
+                        break;
+                    case 'd':
+                        axis = {{ 1},{ 0},{ 0},{ 0}};
+                        break;
+                }
+                Ship::USS_Ent.force += Ship::USS_Ent.object.matrix * axis * Ship::USS_Ent.thrust;
+            } else if(ch == 'q' || ch == 'e') { //Rotate
+                switch(ch) {
+                    case 'q':
+                        Ship::USS_Ent.spin -= Ship::USS_Ent.thrust;
+                        break;
+                    case 'e':
+                        Ship::USS_Ent.spin += Ship::USS_Ent.thrust;
+                        break;
+                }
+            } else if(ch == 'i' && prevCh != ch) {  //Toggle Dampener
+                Ship::USS_Ent.dampener = !Ship::USS_Ent.dampener;
+            }
+            prevCh = 0;
         }
         this_thread::sleep_for(chrono::milliseconds(10));
-        prevCh = ch;
     }
 }

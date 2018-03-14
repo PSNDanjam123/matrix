@@ -7,6 +7,7 @@ using namespace Jim::Core;
 
 namespace Ship {
     extern std::mutex ncurseMutex;
+    extern std::mutex modify;
 
     extern bool running;   //App status
 
@@ -56,6 +57,7 @@ namespace Ship {
 
     //Methods
     void init();
+    void setPos(object& obj, float x, float y, float z);
     void rotate(object& obj, float deg);
     void translate(object& obj, float x, float y, float z);
     void scale(object& scale, float x, float y, float z);
