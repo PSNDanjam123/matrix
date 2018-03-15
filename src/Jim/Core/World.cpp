@@ -11,27 +11,27 @@ Jim::Core::World::World(unsigned w, unsigned h, unsigned d) {
 
 void Jim::Core::World::tick() {
     lock_guard<mutex> lock(this->_mutex);
-    struct matrixGroup {
-        Object::matrix translation;
-        Object::matrix transformation;
-        Object::matrix rotation;
-    };
+    vector<vector<Object::matrix>> objects;
+
     for(auto object : this->objects) {
         //Extract object vertices
-        vector<Object::matrix> matrices = object->getVertices();
+        vector<Object::matrix> vertices = object->getVertices();
 
-        //Extract matrices
+        //Determine matrix
         object->setActiveMatrix("local");
-        struct matrixGroup local = {
-            .translation = object->getTranslation(),
-            .transformation = object->getTransformation(),
-            .rotation = object->getRotation()
-        };
+        Object::matrix local = object->getTransformation() * object->getTranslation() * object->getRotation();
+
         object->setActiveMatrix("world");
-        struct matrixGroup world = {
-            .translation = object->getTranslation(),
-            .transformation = object->getTransformation(),
-            .rotation = object->getRotation()
-        };
+        Object::matrix world = object->getTransformation() * object->getTranslation() * object->getRotation();
+
+        Object::matrix matrix = local * world;
+
+        //Apply matrix to vertices
+        for(auto& vertex : vertices) {
+            vertex = matrix * vertex;
+        }
+
+        //Add rendered vertices to objects
+        objects.push_back(vertices);
     }
 }
