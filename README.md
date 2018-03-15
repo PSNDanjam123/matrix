@@ -38,6 +38,19 @@ x = translation along the x axis
 y = translation along the y axis
 z = translation along the z axis
 ```
+### Transformation
+To Transform an object in 3D space you have to increase/decrease its size using the x,y and z coords. The way I think about this is you are basically just changing the ones values on an identity matrix. Note: changing x,y and z by the same amount is how to scale:
+```
+s = [[x,0,0,0],
+     [0,y,0,0],
+     [0,0,z,0],
+     [0,0,0,1]];
+
+s = scale matrix 
+x = scaling along the x axis
+y = scaling along the y axis
+z = scaling along the z axis
+```
 ### Projection
 #### Calculating FOV
 The field of view (FOV) of a camera can be determined by the distance of the viewer position away from the display surface. An example of this is the closer you sit to your screen, the more of the screen will take up your vision.
