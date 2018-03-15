@@ -32,6 +32,9 @@ namespace Jim::Core {
             buffer getVertexBuffer();
             void setActiveMatrix(std::string name);
             std::string getActiveMatrixName();
+            matrix getTranslation();
+            matrix getTransformation();
+            matrix getRotation();
             template <typename T>
                 void translate(T x, T y, T z) {
                     std::lock_guard<std::mutex> lock(this->_mutex);

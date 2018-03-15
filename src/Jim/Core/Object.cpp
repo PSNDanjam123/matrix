@@ -62,3 +62,15 @@ vector<Jim::Core::Object::matrix> Jim::Core::Object::getVertices() {
     }
     return matrices;
 }
+
+Jim::Core::Object::matrix Jim::Core::Object::getTranslation() {
+    return this->_active->translation;
+}
+
+Jim::Core::Object::matrix Jim::Core::Object::getRotation() {
+    return this->_active->rotation;
+}
+
+Jim::Core::Object::matrix Jim::Core::Object::getTransformation() {
+    return this->_active->transformation;
+}

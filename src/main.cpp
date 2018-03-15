@@ -43,5 +43,7 @@ int main(void) {
 
     world.objects.push_back(&cube);
 
+    world.tick();
+
     return 0;
 }
