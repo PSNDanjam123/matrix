@@ -1,4 +1,4 @@
-#include "./Jim/Core/Object.h"
+#include "./Jim/Core/World.h"
 using namespace Jim::Core;
 
 int main(void) {
@@ -38,6 +38,10 @@ int main(void) {
         1,  -1,  1,
         -1,  -1, -1,
         1,  -1, -1};
+
+    World world(500,500,500);
+
+    world.objects.push_back(&cube);
 
     return 0;
 }

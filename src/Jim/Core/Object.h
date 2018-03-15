@@ -91,6 +91,7 @@ namespace Jim::Core {
                         {0.0, 0.0, 0.0, 1.0}};
                     this->_active->transformation = m * this->_active->transformation;
                 }
+            std::vector<matrix> getVertices();
         private:
             buffer _vertexBuffer;
             typedef struct matrixGroup {    //Sperate all for combining later
