@@ -46,7 +46,8 @@ int main(void) {
 
     World world(500,500,500);
 
-    cube1.transform(10.0,10.0,10.0);
+    cube1.translate(0.0f,0.0f, -1.0f);
+    cube1.transform(2.0,2.0,2.0);
 
     world.objects.push_back(&cube1);
 
@@ -57,6 +58,7 @@ int main(void) {
     char ch = 'a';
 
     while(ch != 'q') {
+        cube1.rotateY(5.0f);
         ch = getch();
         if(ch == 'a') {
             world.camera.translate(-1.0f, 0.0f, 0.0f);

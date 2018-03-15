@@ -3,7 +3,7 @@
 using namespace std;
 
 Jim::Core::Camera::Camera() {
-    this->_fov = 90;
+    this->_fov = .9;
     this->_pos = {{0.0},{0.0},{0.0},{0.0}};
 }
 
@@ -33,13 +33,13 @@ std::vector<std::vector<Jim::Core::Object::matrix>> Jim::Core::Camera::render(st
 
     double z = this->FOVToZ(this->_fov);
 
-    Object::matrix e = {{0.0},{0.0},{z},{1.0}};
+    Object::matrix e = {{0.0},{0.0},{-z},{0.0}};
 
     Object::matrix m = {
         {1.0, 0.0, -(e.get(0,0)/e.get(0,2)), 0.0},
         {0.0, 1.0, -(e.get(0,1)/e.get(0,2)), 0.0},
         {0.0, 0.0, 1.0, 0.0},
-        {0.0, 0.0, -(e.get(0,2)/e.get(0,2)), 1.0}};
+        {0.0, 0.0, -(1/e.get(0,2)), 1.0}};
 
     for(auto& object : objects) {
         for(auto& vertex : object) {
