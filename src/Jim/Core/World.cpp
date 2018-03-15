@@ -38,22 +38,14 @@ void Jim::Core::World::tick() {
     objects = this->camera.render(objects);
 
     //demo
-    if(1 == 2) {
-        for(auto& object : objects) {
-            for(auto& vertex : object) {
-                std::cout << vertex.str();
-            }
+    int world_x, world_y;
+    getmaxyx(stdscr, world_y, world_x);
+    for(auto& object : objects) {
+        for(auto& vertex : object) {
+            int x = (world_x / 2) - vertex.get(0,0);
+            int y = (world_y / 2) - vertex.get(0,1);
+            mvaddch(y,x,'x');
         }
-    } else {
-        initscr();
-        clear();
-        for(auto& object : objects) {
-            for(auto& vertex : object) {
-                mvaddch(vertex.get(0,1), vertex.get(0,0), 'x');
-            }
-        }
-        refresh();
-        getch();
-        endwin();
     }
+
 }

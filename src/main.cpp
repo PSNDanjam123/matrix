@@ -1,3 +1,4 @@
+#include <ncurses.h>
 #include "./Jim/Core/World.h"
 using namespace Jim::Core;
 
@@ -45,17 +46,33 @@ int main(void) {
 
     World world(500,500,500);
 
+    cube1.transform(10.0,10.0,10.0);
+
     world.objects.push_back(&cube1);
-    world.objects.push_back(&cube2);
-    world.objects.push_back(&cube3);
 
-    cube2.translate(5.0f,5.0f,5.0f);
-    cube2.transform(5.0,5.0,5.0);
+    initscr();
+    curs_set(0);
+    noecho();
 
-    cube3.translate(6.0f, 1.0f, 10.0f);
-    cube3.transform(7.0,7.0,7.0);
+    char ch = 'a';
 
-    world.tick();
+    while(ch != 'q') {
+        ch = getch();
+        if(ch == 'a') {
+            world.camera.translate(-1.0f, 0.0f, 0.0f);
+        } else if(ch == 'd') {
+            world.camera.translate(1.0f, 0.0f, 0.0f);
+        } else if(ch == 'w') {
+            world.camera.translate(0.0f, 0.0f, 1.0f);
+        } else if(ch == 's') {
+            world.camera.translate(0.0f, 0.0f, -1.0f);
+        }
+        clear();
+        world.tick();
+        refresh();
+    }
+
+    endwin();
 
     return 0;
 }

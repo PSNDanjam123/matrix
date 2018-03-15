@@ -3,7 +3,14 @@
 using namespace std;
 
 Jim::Core::Camera::Camera() {
-    this->_fov = 75;
+    this->_fov = 90;
+    this->_pos = {{0.0},{0.0},{0.0},{0.0}};
+}
+
+void Jim::Core::Camera::translate(float x, float y, float z) {
+    this->_pos.set(0,0, this->_pos.get(0,0) + x);
+    this->_pos.set(0,1, this->_pos.get(0,1) + y);
+    this->_pos.set(0,2, this->_pos.get(0,2) + z);
 }
 
 void Jim::Core::Camera::setFOV(float fov) {
@@ -26,9 +33,7 @@ std::vector<std::vector<Jim::Core::Object::matrix>> Jim::Core::Camera::render(st
 
     double z = this->FOVToZ(this->_fov);
 
-    Object::matrix c = {{0.0},{0.0}, {-1.0}, {1.0}};
-
-    Object::matrix e = {{1.0},{1.0},{z},{1.0}};
+    Object::matrix e = {{0.0},{0.0},{z},{1.0}};
 
     Object::matrix m = {
         {1.0, 0.0, -(e.get(0,0)/e.get(0,2)), 0.0},
@@ -38,8 +43,10 @@ std::vector<std::vector<Jim::Core::Object::matrix>> Jim::Core::Camera::render(st
 
     for(auto& object : objects) {
         for(auto& vertex : object) {
-            vertex = vertex - c;
+            vertex = vertex - this->_pos;
             vertex = m * vertex;
+            vertex.set(0,0, vertex.get(0,0) / vertex.get(0,3));
+            vertex.set(0,1, vertex.get(0,1) / vertex.get(0,3));
         }
     }
     return objects;
