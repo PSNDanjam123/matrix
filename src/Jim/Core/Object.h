@@ -14,6 +14,7 @@ namespace Jim::Core {
             typedef Matrix<unit> matrix;
             Object();
             Object(buffer);
+            Object(Object&);
             template <typename T>
                 Object(std::initializer_list<T> list) : Object() {
                     for(auto& item : list) {

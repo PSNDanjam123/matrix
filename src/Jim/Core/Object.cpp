@@ -12,6 +12,7 @@ Jim::Core::Object::Object(buffer vertexBuffer) : Object() {
     this->_vertexBuffer = vertexBuffer;
 }
 
+
 void Jim::Core::Object::setVertexBuffer(buffer vertexBuffer) {
     lock_guard<mutex> lock(this->_mutex);
     this->_vertexBuffer = vertexBuffer;
