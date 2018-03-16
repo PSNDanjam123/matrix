@@ -15,9 +15,9 @@ y = [[  cos(r),       0,  sin(r),       0],
      [ -sin(r),       0,  cos(r),       0],
      [       0,       0,       0,       1]];
      
-z = [[  cos(r),       0, -sin(r),       0],
-     [  sin(r),       1,  cos(r),       0],
-     [       0,       0,       0,       0],
+z = [[  cos(r), -sin(r),       0,       0],
+     [  sin(r),  cos(r),       0        0],
+     [       0,       0,       1,       0],
      [       0,       0,       0,       1]];
 
 r = angle in radians
