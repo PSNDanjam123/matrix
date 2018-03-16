@@ -74,6 +74,9 @@ int main(void) {
                     break;
             }
         }
+        string info = "FOV: " + to_string(camera.getFOV());
+        mvprintw(0,0,info.c_str());
+
         refresh();
         this_thread::sleep_for(chrono::microseconds(33333)); 
     }

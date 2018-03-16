@@ -11,8 +11,8 @@ Jim::Component::Camera::Camera() {
 
 unit Jim::Component::Camera::getFOV() {
     xyz viewerPos = this->_viewer.getPosition();
-    unit z = degToRad(viewerPos.z);
-    return 2 * atan(1/z);
+    unit z = viewerPos.z;
+    return radToDeg(2 * atan(1/z));
 }
 
 void Jim::Component::Camera::setFOV(unit fov) {
