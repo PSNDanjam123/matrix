@@ -23,6 +23,7 @@ namespace Jim::Component::Core {
             void setPosition(unit x, unit y, unit z);
             void setRotation(unit x, unit y, unit z);
             void setScale(unit x, unit y, unit z);
+            matrix getMatrix();
             matrix getTranslationMatrix();
             matrix getRotationMatrix();
             matrix getRotationXMatrix();

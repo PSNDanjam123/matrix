@@ -13,7 +13,7 @@ int main(void) {
             -1, 1, 0,
              1, 1, 0});
 
-    matrix m = test.getRotationMatrix();
+    matrix m = test.getMatrix();
 
     std::cout << m.str();
 

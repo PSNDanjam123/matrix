@@ -8,9 +8,9 @@ using namespace Jim::Core::Types;
 using namespace std;
 
 Jim::Component::Core::Object::Object() {
-    this->setPosition(0,0,0);
-    this->setRotation(0,0,0);
     this->setScale(1,1,1);
+    this->setRotation(0,0,0);
+    this->setPosition(0,0,0);
 }
 
 rBuffer Jim::Component::Core::Object::getVertexBuffer() {
@@ -109,7 +109,7 @@ matrix Jim::Component::Core::Object::getRotationZMatrix() {
     unit sin = std::sin(rad);
     matrix m(4,4);
     m = m.identity();
-    m.set(0,0, cos).set(2,0, -sin).set(0,1, sin).set(2,1, cos);
+    m.set(0,0, cos).set(1,0, -sin).set(0,1, sin).set(1,1, cos);
     return m;
 }
 
@@ -117,5 +117,12 @@ matrix Jim::Component::Core::Object::getRotationMatrix() {
     matrix x = this->getRotationXMatrix();
     matrix y = this->getRotationYMatrix();
     matrix z = this->getRotationZMatrix();
-    return z * y * z;
+    return z * y * x;
+}
+
+matrix Jim::Component::Core::Object::getMatrix() {
+    matrix t = this->getTranslationMatrix();
+    matrix s = this->getTransformationMatrix();
+    matrix r = this->getRotationMatrix();
+    return r * t * s;
 }
