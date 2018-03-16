@@ -124,5 +124,5 @@ matrix Jim::Component::Core::Object::getMatrix() {
     matrix t = this->getTranslationMatrix();
     matrix s = this->getTransformationMatrix();
     matrix r = this->getRotationMatrix();
-    return r * t * s;
+    return t * r * s;
 }
