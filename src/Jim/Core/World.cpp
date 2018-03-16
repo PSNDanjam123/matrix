@@ -39,13 +39,16 @@ void Jim::Core::World::tick() {
 
     //demo
     int world_x, world_y;
+    float h_mul = 1.0, w_hul = 1.5;
+
     getmaxyx(stdscr, world_y, world_x);
+
     for(auto& object : objects) {
         Object::matrix* prev = 0;
         for(auto& vertex : object) {
             int x = (world_x / 2) - vertex.get(0,0);
             int y = (world_y / 2) - vertex.get(0,1);
-            mvaddch(y,x,'x');
+            mvaddch(y * h_mul, x * w_hul,'x');
 
             /**
             //Join the lines
