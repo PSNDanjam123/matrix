@@ -41,11 +41,33 @@ void Jim::Core::World::tick() {
     int world_x, world_y;
     getmaxyx(stdscr, world_y, world_x);
     for(auto& object : objects) {
+        Object::matrix* prev = 0;
         for(auto& vertex : object) {
             int x = (world_x / 2) - vertex.get(0,0);
             int y = (world_y / 2) - vertex.get(0,1);
             mvaddch(y,x,'x');
+
+            /**
+            //Join the lines
+            if(prev != 0) {
+                int nx = x, ny = y, px = prev->get(0,0), py = prev->get(0,1);
+                px = (world_x / 2) - px;
+                py = (world_y / 2) - py;
+
+                //Get distance
+                unsigned ax = abs(px - nx);
+                unsigned ay = abs(py - ny);
+
+                //Increment amount
+                float ix = ay / ax;
+                float iy = ax / ay;
+
+            }
+            **/
+
+            prev = &vertex;
         }
+        prev = 0;
     }
 
 }

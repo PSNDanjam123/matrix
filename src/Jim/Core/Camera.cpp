@@ -22,6 +22,9 @@ float Jim::Core::Camera::getFOV() {
 }
 
 float Jim::Core::Camera::FOVToZ(float fov) {
+    float pi = 3.141592;
+    fov = fov / 180 * pi;
+
     return 1 / tan(fov/2);
 }
 
@@ -33,7 +36,7 @@ std::vector<std::vector<Jim::Core::Object::matrix>> Jim::Core::Camera::render(st
 
     double z = this->FOVToZ(this->_fov);
 
-    Object::matrix e = {{0.0},{0.0},{-z},{0.0}};
+    Object::matrix e = {{0.0},{0.0},{z},{0.0}};
 
     Object::matrix m = {
         {1.0, 0.0, -(e.get(0,0)/e.get(0,2)), 0.0},
