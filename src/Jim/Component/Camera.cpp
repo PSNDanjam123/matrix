@@ -1,13 +1,31 @@
+#include <cmath>
 #include "./Camera.h"
+#include "../Core/Math.h"
 
-Jim::Component::Camera::Camera() : Object() {
-    this->_fov = 90;
+using namespace Jim::Core::Math;
+using namespace std;
+
+Jim::Component::Camera::Camera() {
+    this->setFOV(90);
 }
 
 unit Jim::Component::Camera::getFOV() {
-    return this->_fov;
+    xyz viewerPos = this->_viewer.getPosition();
+    unit z = degToRad(viewerPos.z);
+    return 2 * atan(1/z);
 }
 
 void Jim::Component::Camera::setFOV(unit fov) {
-    this->_fov = fov;
+    unit f = degToRad(fov);
+    unit z = 1 / tan(f/2);
+    xyz viewerPos = this->_viewer.getPosition();
+    this->_viewer.setPosition(viewerPos.x, viewerPos.y, z);
+}
+
+matrix Jim::Component::Camera::getProjectionMatrix() {
+    matrix m(4,4);
+    m = m.identity();
+    xyz viewerPos = this->_viewer.getPosition();
+    m.set(3,0,-(viewerPos.x/viewerPos.z)).set(3,1, -(viewerPos.y/viewerPos.z)).set(3,3, -(1/viewerPos.z));
+    return m;
 }

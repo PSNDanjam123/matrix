@@ -9,7 +9,8 @@ namespace Jim::Component {
             Camera();
             void setFOV(unit fov);
             unit getFOV(); 
+            matrix getProjectionMatrix();
         private:
-            unit _fov;
+            Object _viewer;
     };
 }
