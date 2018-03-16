@@ -69,3 +69,15 @@ f = 2 * arctan(1/z);
 f = field of view
 z = distance from display surface
 ```
+#### Projection
+Now that we know the field of view needed we can create our 4x4 projection matrix. You're basically modifying the values of the Z axis for each axis to account for the FOV:
+```
+p = [[1, 0, -(Ex/Ez), 0],
+     [0, 1, -(Ey/Ez), 0],
+     [0, 0,        1, 0],
+     [0, 0,  -(1/Ez), 0]];
+     
+Ex = x position of the viewer
+Ey = y position of the viewer
+Ez = z position of the viewer
+```
