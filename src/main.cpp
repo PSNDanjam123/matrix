@@ -16,21 +16,28 @@ void render(unit x, unit y) {
     unit scalex = 1.5, scaley = 1;
     getmaxyx(stdscr,worldY, worldX);
     unsigned cx = worldX / 2, cy = worldY / 2;
-    unsigned ax = (cx + x) * scalex;
-    unsigned ay = (cy + y) * scaley;
+    unsigned ax = cx + x * scalex;
+    unsigned ay = cy + y * scaley;
     mvaddch(ay, ax, 'x');
 }
 
 int main(void) {
-    Object triangle;
+    Object cube;
     Camera camera;
 
-    triangle.setVertexBuffer({
-            -1,-1, 0,
-            -1, 1, 0,
-             1, 1, 0});
+    cube.setVertexBuffer({
+            -1,-1,-1,
+            -1,-1, 1,
+            -1, 1, 1,
+            -1, 1,-1,
 
-    triangle.setScale(3,3,3);
+             1,-1,-1,
+             1,-1, 1,
+             1, 1, 1,
+             1, 1,-1
+            });
+
+    cube.setScale(3,3,3);
 
     initscr();
     curs_set(0);
@@ -38,10 +45,10 @@ int main(void) {
 
 
     while(true) {
-        triangle.rotate(1,0.5,0.3);
+        cube.rotate(3,2,1);
 
-        buffer vBuf = triangle.getVertexBuffer();
-        matrix m = triangle.getMatrix() * camera.getProjectionMatrix();
+        buffer vBuf = cube.getVertexBuffer();
+        matrix m = cube.getMatrix() * camera.getProjectionMatrix();
 
         unsigned i = 0;
         xyz actual = {.x = 0, .y = 0, .z = 0};
@@ -68,7 +75,7 @@ int main(void) {
             }
         }
         refresh();
-        this_thread::sleep_for(chrono::milliseconds(10)); 
+        this_thread::sleep_for(chrono::microseconds(33333)); 
     }
 
     endwin();
