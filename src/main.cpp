@@ -28,6 +28,8 @@ int main(void) {
              1, 1,-1
             });
 
+    cube.translate(0,0,-5);
+
     renderer.addObject(&cube);
     renderer.setCamera(&camera);
     char ch;
