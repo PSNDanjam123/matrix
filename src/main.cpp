@@ -46,6 +46,7 @@ int main(void) {
     cube.setScale(3,3,3);
 
     while(true) {
+        cube.rotate(5,4,3);
         ch = getch();
         if(ch != ERR) {
             switch(ch) {
@@ -108,8 +109,6 @@ int main(void) {
         info += "\n\nCUBE POS: x:" + to_string(pos.x) + ", y:" + to_string(pos.y) + ", z:" + to_string(pos.z);
         info += "\nCUBE ROT: x:" + to_string(rot.x) + ", y:" + to_string(rot.y) + ", z:" + to_string(rot.z);
         mvprintw(0,0,info.c_str());
-
-        mvprintw(20,0,camera.getProjectionMatrix().str().c_str());
 
         refresh();
         this_thread::sleep_for(chrono::microseconds(33333)); 
