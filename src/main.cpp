@@ -77,7 +77,6 @@ int main(void) {
         }
 
         buffer vBuf = cube.getVertexBuffer();
-        matrix m = cube.getMatrix();
 
         unsigned i = 0;
         xyz actual = {.x = 0, .y = 0, .z = 0};
@@ -95,7 +94,7 @@ int main(void) {
                     actual.z = index;
                     matrix vertex(1,4);
                     vertex.set(0,0, actual.x).set(0,1, actual.y).set(0,2, actual.z).set(0,3,1);
-                    vertex = m * camera.getProjectionMatrix()  * vertex;
+                    vertex = camera.getProjectionMatrix() * (cube.getMatrix() * vertex);
                     vertex.set(0,0, vertex.get(0,0)/vertex.get(0,3)).set(0,1, vertex.get(0,1)/vertex.get(0,3));
                     render(vertex.get(0,0), vertex.get(0,1));
                     actual = {.x = 0, .y = 0, .z = 0};

@@ -6,7 +6,7 @@ using namespace Jim::Core::Math;
 using namespace std;
 
 Jim::Component::Camera::Camera() {
-    this->setFOV(75);
+    this->setFOV(.9);
 }
 
 unit Jim::Component::Camera::getFOV() {
