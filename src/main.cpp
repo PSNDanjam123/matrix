@@ -43,6 +43,8 @@ int main(void) {
     timeout(0);
     char ch;
 
+    cube.setScale(3,3,3);
+
     while(true) {
         ch = getch();
         if(ch != ERR) {
@@ -75,7 +77,7 @@ int main(void) {
         }
 
         buffer vBuf = cube.getVertexBuffer();
-        matrix m = cube.getMatrix() * camera.getProjectionMatrix();
+        matrix m = cube.getMatrix();
 
         unsigned i = 0;
         xyz actual = {.x = 0, .y = 0, .z = 0};
@@ -93,7 +95,7 @@ int main(void) {
                     actual.z = index;
                     matrix vertex(1,4);
                     vertex.set(0,0, actual.x).set(0,1, actual.y).set(0,2, actual.z).set(0,3,1);
-                    vertex = m * vertex;
+                    vertex = m * camera.getProjectionMatrix()  * vertex;
                     vertex.set(0,0, vertex.get(0,0)/vertex.get(0,3)).set(0,1, vertex.get(0,1)/vertex.get(0,3));
                     render(vertex.get(0,0), vertex.get(0,1));
                     actual = {.x = 0, .y = 0, .z = 0};
@@ -107,6 +109,8 @@ int main(void) {
         info += "\n\nCUBE POS: x:" + to_string(pos.x) + ", y:" + to_string(pos.y) + ", z:" + to_string(pos.z);
         info += "\nCUBE ROT: x:" + to_string(rot.x) + ", y:" + to_string(rot.y) + ", z:" + to_string(rot.z);
         mvprintw(0,0,info.c_str());
+
+        mvprintw(20,0,camera.getProjectionMatrix().str().c_str());
 
         refresh();
         this_thread::sleep_for(chrono::microseconds(33333)); 
