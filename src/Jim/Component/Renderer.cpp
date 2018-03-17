@@ -60,8 +60,10 @@ void Jim::Component::Renderer::render() {
                     break;
                 case 3:
                     position.z = index;
+                    break;
+                case 4:
                     i = 0;
-                    if(position.x <= 1 && position.x >= -1 && position.y <= 1 && position.y >= -1) {
+                    if(position.x <= 1 && position.x >= -1 && position.y <= 1 && position.y >= -1 && index > 0) {
                         position.x = screenX / 2 + position.x * (((screenX * 1.5 > screenY) ? screenY : screenX) / 2) * 1.5;
                         position.y = screenY / 2 + position.y * (((screenX * 1.5 > screenY) ? screenY : screenX) / 2);
                         mvaddch(position.y, position.x, 'x');
@@ -102,6 +104,7 @@ void Jim::Component::Renderer::renderObjects() {
                     vRenBuf.push_back(vertex.get(0,0));
                     vRenBuf.push_back(vertex.get(0,1));
                     vRenBuf.push_back(vertex.get(0,2));
+                    vRenBuf.push_back(vertex.get(0,3));
                     actual = {.x = 0, .y = 0, .z = 0};
                     i = 0;
                     break;
