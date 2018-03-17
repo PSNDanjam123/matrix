@@ -6,7 +6,7 @@ using namespace Jim::Core::Math;
 using namespace std;
 
 Jim::Component::Camera::Camera() {
-    this->setFOV(90);
+    this->setFOV(75);
 }
 
 unit Jim::Component::Camera::getFOV() {
@@ -26,6 +26,6 @@ matrix Jim::Component::Camera::getProjectionMatrix() {
     matrix m(4,4);
     m = m.identity();
     xyz viewerPos = this->_viewer.getPosition();
-    m.set(3,0,-(viewerPos.x/viewerPos.z)).set(3,1, -(viewerPos.y/viewerPos.z)).set(3,3, -(1/viewerPos.z));
+    m.set(2,0,-(viewerPos.x/viewerPos.z)).set(2,1, -(viewerPos.y/viewerPos.z)).set(2,3, -(1/viewerPos.z));
     return m;
 }
