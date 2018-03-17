@@ -26,6 +26,8 @@ int main(void) {
     Camera camera;
 
     cube.setVertexBuffer({
+             0, 0, 0,
+
             -1,-1,-1,
             -1,-1, 1,
             -1, 1, 1,
@@ -43,10 +45,7 @@ int main(void) {
     timeout(0);
     char ch;
 
-    cube.setScale(3,3,3);
-
     while(true) {
-        cube.rotate(5,4,3);
         ch = getch();
         if(ch != ERR) {
             switch(ch) {
@@ -97,7 +96,11 @@ int main(void) {
                     vertex.set(0,0, actual.x).set(0,1, actual.y).set(0,2, actual.z).set(0,3,1);
                     vertex = camera.getProjectionMatrix() * (cube.getMatrix() * vertex);
                     vertex.set(0,0, vertex.get(0,0)/vertex.get(0,3)).set(0,1, vertex.get(0,1)/vertex.get(0,3));
-                    render(vertex.get(0,0), vertex.get(0,1));
+                    if(vertex.get(0,0) <= 1 && vertex.get(0,0) >= -1 && vertex.get(0,1) <= 1 && vertex.get(0,1) >= -1) {
+                        vertex.set(0,0, vertex.get(0,0) * 100);
+                        vertex.set(0,1, vertex.get(0,1) * 100);
+                        render(vertex.get(0,0), vertex.get(0,1));
+                    }
                     actual = {.x = 0, .y = 0, .z = 0};
                     i = 0;
                     break;
