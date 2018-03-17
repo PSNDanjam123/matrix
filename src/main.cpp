@@ -2,6 +2,7 @@
 #include "./Jim/Component/Camera.h"
 #include "./Jim/Component/Renderer.h"
 
+#include <ncurses.h>
 #include <thread>
 #include <chrono>
 
@@ -29,7 +30,15 @@ int main(void) {
 
     renderer.addObject(&cube);
     renderer.setCamera(&camera);
-    renderer.renderObjects(); 
+    char ch;
+    while(true) {
+        ch = getch();
+        if(ch == 'w') {
+            cube.rotate(3,0,0);
+        }
+        renderer.render();
+        this_thread::sleep_for(chrono::microseconds(33333));
+    }
 
     return 0;
 }

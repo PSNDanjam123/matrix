@@ -20,6 +20,7 @@ namespace Jim::Component {
             void setCamera(Camera* camera);
             void addObject(Object* object);
             xyz getScreenSize();
+            void render();
             void renderObjects();
         private:
             vector<pixel> _pixels;
