@@ -4,7 +4,7 @@
 using namespace Jim::Component::Core;
 
 namespace Jim::Component {
-    class Camera : Object {
+    class Camera : public Object {
         public:
             Camera();
             void setFOV(unit fov);

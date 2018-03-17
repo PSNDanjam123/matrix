@@ -64,6 +64,10 @@ void Jim::Component::Core::Object::transform(unit x, unit y, unit z) {
     this->setScale(this->_scale.x + x, this->_scale.y + y, this->_scale.z + z);
 }
 
+void Jim::Component::Core::Object::scale(unit x) {
+    this->transform(x,x,x);
+}
+
 void Jim::Component::Core::Object::rotate(unit x, unit y, unit z) {
     this->setRotation(this->_rotation.x + x, this->_rotation.y + y, this->_rotation.z + z);
 }

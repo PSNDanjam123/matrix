@@ -80,6 +80,7 @@ void Jim::Component::Renderer::renderObjects() {
         buffer vRenBuf = {};    //Rendered buffer
         unsigned i = 0;
         xyz actual = {.x = 0, .y = 0, .z = 0};
+        xyz camera = this->_camera->getPosition();
         matrix m = object->getMatrix();
         matrix p = this->_camera->getProjectionMatrix();
         for(auto& index : vBuf) {
@@ -94,7 +95,7 @@ void Jim::Component::Renderer::renderObjects() {
                 case 3:
                     actual.z = index;
                     matrix vertex(1,4);
-                    vertex.set(0,0,actual.x).set(0,1,actual.y).set(0,2,actual.z).set(0,3,1);
+                    vertex.set(0,0,actual.x - camera.x).set(0,1,actual.y - camera.y).set(0,2,actual.z - camera.z).set(0,3,1);
                     vertex = p * (m * vertex);
                     vertex.set(0,0, vertex.get(0,0)/vertex.get(0,3)).set(0,1, vertex.get(0,1)/vertex.get(0,3)).set(0,2, vertex.get(0,2)/vertex.get(0,3));
                     vRenBuf.push_back(vertex.get(0,0));

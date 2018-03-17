@@ -10,26 +10,26 @@ namespace Jim::Component::Core {
     class Object {
         public:
             Object();
-            rBuffer getVertexBuffer();
-            void setVertexBuffer(list1d);
-            void setVertexBuffer(buffer);
-            xyz getPosition();
-            xyz getRotation();
-            xyz getScale();
-            void translate(unit x, unit y, unit z);
-            void transform(unit x, unit y, unit z);
-            void rotate(unit x, unit y, unit z);
-            void scale(unit x);
-            void setPosition(unit x, unit y, unit z);
-            void setRotation(unit x, unit y, unit z);
-            void setScale(unit x, unit y, unit z);
-            matrix getMatrix();
-            matrix getTranslationMatrix();
-            matrix getRotationMatrix();
-            matrix getRotationXMatrix();
-            matrix getRotationYMatrix();
-            matrix getRotationZMatrix();
-            matrix getTransformationMatrix();
+            virtual rBuffer getVertexBuffer();
+            virtual void setVertexBuffer(list1d);
+            virtual void setVertexBuffer(buffer);
+            virtual xyz getPosition();
+            virtual xyz getRotation();
+            virtual xyz getScale();
+            virtual void translate(unit x, unit y, unit z);
+            virtual void transform(unit x, unit y, unit z);
+            virtual void rotate(unit x, unit y, unit z);
+            virtual void scale(unit x);
+            virtual void setPosition(unit x, unit y, unit z);
+            virtual void setRotation(unit x, unit y, unit z);
+            virtual void setScale(unit x, unit y, unit z);
+            virtual matrix getMatrix();
+            virtual matrix getTranslationMatrix();
+            virtual matrix getRotationMatrix();
+            virtual matrix getRotationXMatrix();
+            virtual matrix getRotationYMatrix();
+            virtual matrix getRotationZMatrix();
+            virtual matrix getTransformationMatrix();
         private:
             buffer _vertexBuffer;
             xyz _position;
