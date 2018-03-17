@@ -37,15 +37,42 @@ int main(void) {
              1, 1,-1
             });
 
-    cube.setScale(3,3,3);
-
     initscr();
     curs_set(0);
     noecho();
-
+    timeout(0);
+    char ch;
 
     while(true) {
-        cube.rotate(3,2,1);
+        ch = getch();
+        if(ch != ERR) {
+            switch(ch) {
+                case 'w':
+                    cube.translate(0,0,1);
+                    break;
+                case 's':
+                    cube.translate(0,0,-1);
+                    break;
+                case 'a':
+                    cube.translate(-1,0,0);
+                    break;
+                case 'd':
+                    cube.translate(1,0,0);
+                    break;
+                case 'j':
+                    cube.rotate(0,-1,0);
+                    break;
+                case 'l':
+                    cube.rotate(0,1,0);
+                    break;
+                case 'i':
+                    cube.rotate(-1,0,0);
+                    break;
+                case 'k':
+                    cube.rotate(1,0,0);
+                    break;
+            }
+        }
 
         buffer vBuf = cube.getVertexBuffer();
         matrix m = cube.getMatrix() * camera.getProjectionMatrix();
@@ -74,7 +101,11 @@ int main(void) {
                     break;
             }
         }
+        xyz pos = cube.getPosition();
+        xyz rot = cube.getRotation();
         string info = "FOV: " + to_string(camera.getFOV());
+        info += "\n\nCUBE POS: x:" + to_string(pos.x) + ", y:" + to_string(pos.y) + ", z:" + to_string(pos.z);
+        info += "\nCUBE ROT: x:" + to_string(rot.x) + ", y:" + to_string(rot.y) + ", z:" + to_string(rot.z);
         mvprintw(0,0,info.c_str());
 
         refresh();

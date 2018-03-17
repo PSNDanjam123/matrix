@@ -48,6 +48,9 @@ void Jim::Component::Core::Object::setPosition(unit x, unit y, unit z) {
 }
 
 void Jim::Component::Core::Object::setRotation(unit x, unit y, unit z) {
+    x = fmod(360 + x, 360);
+    y = fmod(360 + y, 360);
+    z = fmod(360 + z, 360);
     threadLock(this->_mutex);
     this->_rotation = {.x = x, .y = y, .z = z};
 }
