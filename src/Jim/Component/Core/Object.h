@@ -35,6 +35,5 @@ namespace Jim::Component::Core {
             xyz _position;
             xyz _rotation;
             xyz _scale;
-            mutex _mutex;
     };
 }

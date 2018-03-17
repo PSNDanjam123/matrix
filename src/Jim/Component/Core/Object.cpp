@@ -26,7 +26,6 @@ void Jim::Component::Core::Object::setVertexBuffer(list1d list) {
 }
 
 void Jim::Component::Core::Object::setVertexBuffer(buffer buf) {
-    threadLock(this->_mutex);
     this->_vertexBuffer = buf;
 }
 
@@ -43,7 +42,6 @@ xyz Jim::Component::Core::Object::getScale() {
 }
 
 void Jim::Component::Core::Object::setPosition(unit x, unit y, unit z) {
-    threadLock(this->_mutex);
     this->_position = {.x = x, .y = y, .z = z};
 }
 
@@ -51,12 +49,10 @@ void Jim::Component::Core::Object::setRotation(unit x, unit y, unit z) {
     x = fmod(360 + x, 360);
     y = fmod(360 + y, 360);
     z = fmod(360 + z, 360);
-    threadLock(this->_mutex);
     this->_rotation = {.x = x, .y = y, .z = z};
 }
 
 void Jim::Component::Core::Object::setScale(unit x, unit y, unit z) {
-    threadLock(this->_mutex);
     this->_scale = {.x = x, .y = y, .z = z};
 }
 
