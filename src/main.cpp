@@ -1,31 +1,57 @@
 #include "./Jim/Component/Core/Object.h"
 #include "./Jim/Component/Camera.h"
 #include "./Jim/Component/Renderer.h"
+#include "./Jim/Core/Math.h"
 
 #include <ncurses.h>
 #include <thread>
 #include <chrono>
+#include <cmath>
 
+using namespace Jim::Core::Math;
 using namespace Jim::Component;
 using namespace Jim::Component::Core;
 using namespace Jim::Core::Types;
 using namespace std;
 
-int main(void) {
-    Object cube;
-    Camera camera;
-    Renderer renderer;
+Object cube;
+Camera camera;
+Renderer renderer;
 
+void handleInput(char ch) {
+    unit r = degToRad(camera.getRotation().y);  //Y rotation
+    unit m = 0.5;   //Move speed
+    unit t = 5;     //Turn speed
+    if(ch == 'w') {
+        camera.translate(m * sin(r),0,m * -cos(r));
+    } else if(ch == 's') {
+        camera.translate(m * -sin(r),0,m * cos(r));
+    } else if(ch == 'a') {
+        camera.translate(m * -cos(r),0,m * sin(r));
+    } else if(ch == 'd') {
+        camera.translate(m * cos(r),0,m * -sin(r));
+    } else if(ch == 'j') {
+        camera.rotate(0,-t,0);
+    } else if(ch == 'l') {
+        camera.rotate(0,t,0);
+    }
+}
+
+bool findKey(vector<char> v, char key) {
+    return (find(v.begin(), v.end(), key) != v.end());
+}
+
+int main(void) {
     cube.setVertexBuffer({
             -1,-1,-1,
             -1,-1, 1,
             -1, 1, 1,
             -1, 1,-1,
 
-             1,-1,-1,
-             1,-1, 1,
-             1, 1, 1,
-             1, 1,-1
+            1,-1,-1,
+            1,-1, 1,
+            1, 1, 1,
+            1, 1,-1
             });
 
     cube.translate(0,0,-5);
@@ -34,34 +60,14 @@ int main(void) {
     renderer.setCamera(&camera);
     char ch;
     while(true) {
-        ch = getch();
-
-        matrix camRot = camera.getRotationMatrix();
-        matrix camCur(1,4); //The local xyz after all the rotations
-        unit speed = 0.1;
-        unit rotSpeed = 1;
-
-        if(ch == 'w') {
-            camCur = {{0.0},{0.0},{-speed},{0.0}};
-            camCur = camRot * camCur;
-            camera.translate(camCur.get(0,0), camCur.get(0,1), camCur.get(0,2));
-        } else if(ch == 's') {
-            camCur = {{0.0},{0.0},{speed},{0.0}};
-            camCur = camRot * camCur;
-            camera.translate(camCur.get(0,0), camCur.get(0,1), camCur.get(0,2));
-        } else if(ch == 'a') {
-            camCur = {{-speed},{0.0},{0.0},{0.0}};
-            camCur = camRot * camCur;
-            camera.translate(camCur.get(0,0), camCur.get(0,1), camCur.get(0,2));
-        } else if(ch == 'd') {
-            camCur = {{speed},{0.0},{0.0},{0.0}};
-            camCur = camRot * camCur;
-            camera.translate(camCur.get(0,0), camCur.get(0,1), camCur.get(0,2));
-        } else if(ch == 'j') {
-            camera.rotate(0,rotSpeed,0);
-        } else if(ch == 'l') {
-            camera.rotate(0,-rotSpeed,0);
+        vector<char> keys = {};
+        while((ch = getch()) != ERR) {
+            if(!findKey(keys, ch)) {
+                keys.push_back(ch);
+            }
+            handleInput(ch);
         }
+
         renderer.render();
         this_thread::sleep_for(chrono::microseconds(33333));
     }
