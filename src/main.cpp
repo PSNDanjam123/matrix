@@ -45,7 +45,10 @@ int main(void) {
 
     cube.translate(0,0,-5);
 
-    while(true) {
+    bool running = true;
+    bool demo = false;
+
+    while(running) {
         ch = getch();
         float s = 0.1;  //Step
         float r = 1;    //Rotate
@@ -64,6 +67,12 @@ int main(void) {
                 case 'd':
                     cube.translate(s,0,0);
                     break;
+                case 'q':
+                    cube.translate(0,-s,0);
+                    break;
+                case 'e':
+                    cube.translate(0,s,0);
+                    break;
                 //Rotate Cube
                 case 'j':
                     cube.rotate(0,-r,0);
@@ -77,12 +86,37 @@ int main(void) {
                 case 'k':
                     cube.rotate(r,0,0);
                     break;
+                case 'u':
+                    cube.rotate(0,0,-r);
+                    break;
+                case 'o':
+                    cube.rotate(0,0,r);
+                    break;
+                //Change FOV
+                case 't':
+                    camera.setFOV(camera.getFOV() - 1);
+                    break;
+                case 'y':
+                    camera.setFOV(camera.getFOV() + 1);
+                    break;
+                //Toggle Demo
+                case 'c':
+                    demo = !(demo);
+                    break;
                 //Reset
                 case 'r':
                     cube.setPosition(0,0,-5);
                     cube.setRotation(0,0,0);
                     break;
+                //Exit
+                case 'x':
+                    running = false;
+                    break;
             }
+        }
+
+        if(demo == true) {
+            cube.rotate(5,4,3);
         }
 
         buffer vBuf = cube.getVertexBuffer();
@@ -118,9 +152,11 @@ int main(void) {
         }
         xyz pos = cube.getPosition();
         xyz rot = cube.getRotation();
-        string info = "FOV: " + to_string(camera.getFOV());
-        info += "\n\nCUBE POS: x:" + to_string(pos.x) + ", y:" + to_string(pos.y) + ", z:" + to_string(pos.z);
-        info += "\nCUBE ROT: x:" + to_string(rot.x) + ", y:" + to_string(rot.y) + ", z:" + to_string(rot.z);
+        string info = "Jim's 3D Cube Demo:\n\n";
+        info += "CUBE CONTROLS:\tmove:wasdqe; rotate;ijkluo; fov:ty; demo:c; reset:r; exit:x;\n";
+        info += "FOV:\t\t" + to_string(camera.getFOV()) + '\n'; 
+        info += "CUBE POS:\tx:" + to_string(pos.x) + ", y:" + to_string(pos.y) + ", z:" + to_string(pos.z) + '\n';
+        info += "CUBE ROT:\tx:" + to_string(rot.x) + ", y:" + to_string(rot.y) + ", z:" + to_string(rot.z);
         mvprintw(0,0,info.c_str());
 
         refresh();
