@@ -43,33 +43,44 @@ int main(void) {
     timeout(0);
     char ch;
 
+    cube.translate(0,0,-5);
+
     while(true) {
         ch = getch();
+        float s = 0.1;  //Step
+        float r = 1;    //Rotate
         if(ch != ERR) {
             switch(ch) {
+                //Move Cube
                 case 'w':
-                    cube.translate(0,0,1);
+                    cube.translate(0,0,s);
                     break;
                 case 's':
-                    cube.translate(0,0,-1);
+                    cube.translate(0,0,-s);
                     break;
                 case 'a':
-                    cube.translate(-1,0,0);
+                    cube.translate(-s,0,0);
                     break;
                 case 'd':
-                    cube.translate(1,0,0);
+                    cube.translate(s,0,0);
                     break;
+                //Rotate Cube
                 case 'j':
-                    cube.rotate(0,-1,0);
+                    cube.rotate(0,-r,0);
                     break;
                 case 'l':
-                    cube.rotate(0,1,0);
+                    cube.rotate(0,r,0);
                     break;
                 case 'i':
-                    cube.rotate(-1,0,0);
+                    cube.rotate(-r,0,0);
                     break;
                 case 'k':
-                    cube.rotate(1,0,0);
+                    cube.rotate(r,0,0);
+                    break;
+                //Reset
+                case 'r':
+                    cube.setPosition(0,0,-5);
+                    cube.setRotation(0,0,0);
                     break;
             }
         }
@@ -94,7 +105,8 @@ int main(void) {
                     vertex.set(0,0, actual.x).set(0,1, actual.y).set(0,2, actual.z).set(0,3,1);
                     vertex = camera.getProjectionMatrix() * (cube.getMatrix() * vertex);
                     vertex.set(0,0, vertex.get(0,0)/vertex.get(0,3)).set(0,1, vertex.get(0,1)/vertex.get(0,3));
-                    if(vertex.get(0,0) <= 1 && vertex.get(0,0) >= -1 && vertex.get(0,1) <= 1 && vertex.get(0,1) >= -1) {
+                    //Prevent vertex out of range being rendered and vertex behind the camera
+                    if(vertex.get(0,0) <= 1 && vertex.get(0,0) >= -1 && vertex.get(0,1) <= 1 && vertex.get(0,1) >= -1 && vertex.get(0,3) > 0) {
                         vertex.set(0,0, vertex.get(0,0) * 100);
                         vertex.set(0,1, vertex.get(0,1) * 100);
                         render(vertex.get(0,0), vertex.get(0,1));
