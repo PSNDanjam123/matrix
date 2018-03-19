@@ -22,8 +22,11 @@ void handleInput(char ch) {
     unit r = degToRad(camera.getRotation().y);  //Y rotation
     unit m = 0.5;   //Move speed
     unit t = 5;     //Turn speed
+    matrix o = camera.getOrientation();
+    matrix a = {{0},{0},{1},{0}};   //Forward
+    a = o * a;
     if(ch == 'w') {
-        camera.translate(m * sin(r),0,m * -cos(r));
+        camera.translate(m * a.get(0,0),-m * a.get(0,1),-m * a.get(0,2));
     } else if(ch == 's') {
         camera.translate(m * -sin(r),0,m * cos(r));
     } else if(ch == 'a') {
@@ -73,6 +76,11 @@ int main(void) {
         }
 
         renderer.render();
+        matrix o = camera.getOrientation();
+        matrix a = {{0},{0},{1},{0}};
+        a = o * a;
+        mvprintw(0,0, a.str().c_str());
+        refresh();
         this_thread::sleep_for(chrono::microseconds(33333));
     }
 
