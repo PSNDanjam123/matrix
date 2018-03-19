@@ -77,6 +77,7 @@ void Jim::Component::Renderer::render() {
 
 void Jim::Component::Renderer::renderObjects() {
     this->_renderedObjects = {};
+    this->_camera->updateOrientation();
     for(auto& object : this->_objects) {
         buffer vBuf = object->getVertexBuffer();
         buffer vRenBuf = {};    //Rendered buffer
@@ -85,7 +86,7 @@ void Jim::Component::Renderer::renderObjects() {
         xyz camera = this->_camera->getPosition();
         matrix m = object->getMatrix();
         matrix p = this->_camera->getProjectionMatrix();
-        matrix c = this->_camera->getRotationMatrix();
+        matrix c = this->_camera->getOrientation();
         for(auto& index : vBuf) {
             i++;
             switch(i) {
@@ -99,7 +100,7 @@ void Jim::Component::Renderer::renderObjects() {
                     actual.z = index;
                     matrix vertex(1,4);
                     vertex.set(0,0,actual.x - camera.x).set(0,1,actual.y - camera.y).set(0,2,actual.z - camera.z).set(0,3,1);
-                    vertex = p * (c * (m *vertex));
+                    vertex = p * (c * (m * vertex));
                     vertex.set(0,0, vertex.get(0,0)/vertex.get(0,3)).set(0,1, vertex.get(0,1)/vertex.get(0,3)).set(0,2, vertex.get(0,2)/vertex.get(0,3));
                     vRenBuf.push_back(vertex.get(0,0));
                     vRenBuf.push_back(vertex.get(0,1));

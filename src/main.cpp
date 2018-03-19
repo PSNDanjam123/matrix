@@ -34,6 +34,10 @@ void handleInput(char ch) {
         camera.rotate(0,-t,0);
     } else if(ch == 'l') {
         camera.rotate(0,t,0);
+    } else if(ch == 'i') {
+        camera.rotate(-t,0,0);
+    } else if(ch == 'k') {
+        camera.rotate(t,0,0);
     }
 }
 

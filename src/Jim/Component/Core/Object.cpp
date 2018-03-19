@@ -8,9 +8,11 @@ using namespace Jim::Core::Types;
 using namespace std;
 
 Jim::Component::Core::Object::Object() {
+    this->_orientation = matrix(4,4).identity();
     this->setScale(1,1,1);
     this->setRotation(0,0,0);
     this->setPosition(0,0,0);
+    this->updateOrientation();
 }
 
 rBuffer Jim::Component::Core::Object::getVertexBuffer() {
@@ -87,7 +89,7 @@ matrix Jim::Component::Core::Object::getTransformationMatrix() {
 }
 
 matrix Jim::Component::Core::Object::getRotationXMatrix() {
-    unit rad = degToRad(this->_rotation.x);
+    unit rad = degToRad(this->_nextRotation.x - this->_rotation.x);
     unit cos = std::cos(rad);
     unit sin = std::sin(rad);
     matrix m(4,4);
@@ -97,7 +99,7 @@ matrix Jim::Component::Core::Object::getRotationXMatrix() {
 }
 
 matrix Jim::Component::Core::Object::getRotationYMatrix() {
-    unit rad = degToRad(this->_rotation.y);
+    unit rad = degToRad(this->_nextRotation.y - this->_rotation.y);
     unit cos = std::cos(rad);
     unit sin = std::sin(rad);
     matrix m(4,4);
@@ -107,7 +109,7 @@ matrix Jim::Component::Core::Object::getRotationYMatrix() {
 }
 
 matrix Jim::Component::Core::Object::getRotationZMatrix() {
-    unit rad = degToRad(this->_rotation.z);
+    unit rad = degToRad(this->_nextRotation.y - this->_rotation.z);
     unit cos = std::cos(rad);
     unit sin = std::sin(rad);
     matrix m(4,4);
@@ -128,4 +130,15 @@ matrix Jim::Component::Core::Object::getMatrix() {
     matrix s = this->getTransformationMatrix();
     matrix r = this->getRotationMatrix();
     return s * t * r;
+}
+
+void Jim::Component::Core::Object::updateOrientation() {
+    matrix rot = this->getRotationMatrix();
+    this->_orientation = rot * this->_orientation;
+    this->_rotation = this->_nextRotation;
+    this->_nextRotation = this->_rotation;
+}
+
+matrix Jim::Component::Core::Object::getOrientation() {
+    return this->_orientation;
 }

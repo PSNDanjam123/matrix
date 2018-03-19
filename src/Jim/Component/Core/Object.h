@@ -30,10 +30,14 @@ namespace Jim::Component::Core {
             virtual matrix getRotationYMatrix();
             virtual matrix getRotationZMatrix();
             virtual matrix getTransformationMatrix();
+            virtual matrix getOrientation();
+            virtual void updateOrientation();
         private:
             buffer _vertexBuffer;
             xyz _position;
             xyz _rotation;
             xyz _scale;
+            xyz _nextRotation;
+            matrix _orientation;
     };
 }
