@@ -19,23 +19,24 @@ Camera camera;
 Renderer renderer;
 
 void handleInput(char ch) {
-    unit r = degToRad(camera.getRotation().y);  //Y rotation
     unit m = 0.5;   //Move speed
     unit t = 5;     //Turn speed
     matrix o = camera.getOrientation();
     matrix a = {{0},{0},{1},{0}};   //Forward
+    matrix b = {{1},{0},{0},{0}};   //Side
     a = o * a;
+    b = o * b;
     if(ch == 'w') {
-        camera.translate(m * a.get(0,0),-m * a.get(0,1),-m * a.get(0,2));
+        camera.translate(m * a.get(0,0), 0,-m * a.get(0,2));
     } else if(ch == 's') {
-        camera.translate(m * -sin(r),0,m * cos(r));
+        camera.translate(-m * a.get(0,0),0,m * a.get(0,2));
     } else if(ch == 'a') {
-        camera.translate(m * -cos(r),0,m * -sin(r));
+        camera.translate(-m * b.get(0,0),0,m * b.get(0,2));
     } else if(ch == 'd') {
-        camera.translate(m * cos(r),0,m * sin(r));
-    } else if(ch == 'j') {
-        camera.rotate(0,-t,0);
+        camera.translate(m * b.get(0,0),0,-m * b.get(0,2));
     } else if(ch == 'l') {
+        camera.rotate(0,-t,0);
+    } else if(ch == 'j') {
         camera.rotate(0,t,0);
     } else if(ch == 'i') {
         camera.rotate(-t,0,0);
@@ -76,11 +77,6 @@ int main(void) {
         }
 
         renderer.render();
-        matrix o = camera.getOrientation();
-        matrix a = {{0},{0},{1},{0}};
-        a = o * a;
-        mvprintw(0,0, a.str().c_str());
-        refresh();
         this_thread::sleep_for(chrono::microseconds(33333));
     }
 
