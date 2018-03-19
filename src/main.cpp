@@ -27,9 +27,9 @@ void handleInput(char ch) {
     } else if(ch == 's') {
         camera.translate(m * -sin(r),0,m * cos(r));
     } else if(ch == 'a') {
-        camera.translate(m * -cos(r),0,m * sin(r));
+        camera.translate(m * -cos(r),0,m * -sin(r));
     } else if(ch == 'd') {
-        camera.translate(m * cos(r),0,m * -sin(r));
+        camera.translate(m * cos(r),0,m * sin(r));
     } else if(ch == 'j') {
         camera.rotate(0,-t,0);
     } else if(ch == 'l') {
